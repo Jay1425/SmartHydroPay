@@ -223,6 +223,97 @@
         border-radius: 14px;
         padding: 6px;
     }
+
+    /* Simple, reliable animations for new sections */
+    .fade-in-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .fade-in-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-in-left {
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 0.6s ease-out;
+    }
+
+    .slide-in-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-in-right {
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.6s ease-out;
+    }
+
+    .slide-in-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .scale-in {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.5s ease-out;
+    }
+
+    .scale-in.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .counter-animation {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease-out;
+    }
+
+    .counter-animation.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Enhanced card hover for new sections */
+    .info-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    /* Simple icon animation */
+    .simple-icon-hover {
+        transition: all 0.3s ease;
+    }
+
+    .simple-icon-hover:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+
+    /* Staggered animation delays */
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
 </style>
 
 <!-- Hero Section with Light 3D Background -->
@@ -344,6 +435,300 @@
         <a href="{{ url_for('auth.login') }}" class="btn-3d-light inline-block" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), 0 2px 8px rgba(236, 72, 153, 0.15);">
             <i class="fas fa-sign-in-alt mr-2"></i>Login to Dashboard
         </a>
+    </div>
+    {% endif %}
+
+    <!-- Green Hydrogen Information Section -->
+    <div class="fade-in-section mx-4 mb-20" data-section="hydrogen">
+        <div class="info-card p-12">
+            <h2 class="text-5xl font-bold mb-8 text-center text-slate-800">Why Green Hydrogen?</h2>
+            <p class="text-xl text-center text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+                Green hydrogen is revolutionizing the energy landscape as a clean, sustainable fuel source. 
+                Our platform facilitates government subsidies to accelerate green hydrogen adoption and combat climate change.
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="info-card p-8 text-center group scale-in delay-100" data-card="energy">
+                    <div class="simple-icon-hover text-6xl text-green-500 mb-6 group-hover:text-green-600">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">100% Clean Energy</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Produced using renewable energy sources like solar and wind, creating zero carbon emissions during production</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <div class="font-semibold text-green-700">CO2 Reduction</div>
+                            <div class="text-green-600">830 million tons/year</div>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-700">Energy Efficiency</div>
+                            <div class="text-blue-600">75% efficiency rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card p-8 text-center group scale-in delay-200" data-card="storage">
+                    <div class="simple-icon-hover text-6xl text-blue-500 mb-6 group-hover:text-blue-600">
+                        <i class="fas fa-battery-full"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">Energy Storage</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Long-term energy storage solution that can store renewable energy for months without degradation</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-700">Storage Duration</div>
+                            <div class="text-blue-600">Seasonal storage</div>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-700">Energy Density</div>
+                            <div class="text-purple-600">142 MJ/kg</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card p-8 text-center group scale-in delay-300" data-card="applications">
+                    <div class="simple-icon-hover text-6xl text-purple-500 mb-6 group-hover:text-purple-600">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">Industrial Applications</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Versatile fuel for steel production, ammonia synthesis, and heavy transportation sectors</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-700">Market Size</div>
+                            <div class="text-purple-600">$201B by 2025</div>
+                        </div>
+                        <div class="bg-orange-50 p-3 rounded-lg">
+                            <div class="font-semibold text-orange-700">Job Creation</div>
+                            <div class="text-orange-600">30M+ jobs</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits and Impact Section -->
+    <div class="fade-in-section mb-20 px-4" data-section="benefits">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Platform Benefits</h2>
+        <div class="grid lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+            <!-- For Producers -->
+            <div class="info-card p-10 slide-in-left" data-card="producers">
+                <div class="flex items-center mb-6">
+                    <div class="simple-icon-hover text-4xl text-green-500 mr-4">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800">For Producers</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start fade-in-section delay-100" data-benefit="1">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Streamlined Applications</h4>
+                            <p class="text-slate-600">Digital application process reduces paperwork and processing time by 70%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-200" data-benefit="2">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Fast Track Approval</h4>
+                            <p class="text-slate-600">AI-powered pre-screening ensures quick preliminary assessment</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-300" data-benefit="3">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Real-time Tracking</h4>
+                            <p class="text-slate-600">Monitor application status and receive instant notifications</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-400" data-benefit="4">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Expert Support</h4>
+                            <p class="text-slate-600">Access to technical consultants and regulatory guidance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- For Government -->
+            <div class="info-card p-10 slide-in-right" data-card="government">
+                <div class="flex items-center mb-6">
+                    <div class="simple-icon-hover text-4xl text-blue-500 mr-4">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800">For Government</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start fade-in-section delay-100" data-benefit="5">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Transparent Process</h4>
+                            <p class="text-slate-600">Complete audit trail and blockchain-based verification system</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-200" data-benefit="6">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Policy Analytics</h4>
+                            <p class="text-slate-600">Data-driven insights for policy optimization and impact assessment</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-300" data-benefit="7">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Fraud Prevention</h4>
+                            <p class="text-slate-600">Multi-layer verification prevents fraudulent subsidy claims</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-400" data-benefit="8">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Budget Optimization</h4>
+                            <p class="text-slate-600">Smart allocation algorithms maximize subsidy impact</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics and Impact -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Our Impact</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-green-500 mb-4 group-hover:text-green-600">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">2,500+</div>
+                <div class="text-lg text-slate-600">Projects Funded</div>
+                <div class="text-sm text-slate-500 mt-2">Across 15 countries</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">$12.5B</div>
+                <div class="text-lg text-slate-600">Subsidies Distributed</div>
+                <div class="text-sm text-slate-500 mt-2">Since 2023</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-purple-500 mb-4 group-hover:text-purple-600">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">85M</div>
+                <div class="text-lg text-slate-600">Tons CO2 Reduced</div>
+                <div class="text-sm text-slate-500 mt-2">Annual impact</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-orange-500 mb-4 group-hover:text-orange-600">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">150,000</div>
+                <div class="text-lg text-slate-600">Jobs Created</div>
+                <div class="text-sm text-slate-500 mt-2">Green energy sector</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Features -->
+    <div class="fade-in-section mb-20 px-4" data-section="technology">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Advanced Technology</h2>
+        <div class="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div class="info-card p-8 text-center scale-in" data-card="blockchain">
+                <div class="simple-icon-hover text-6xl text-indigo-500 mb-6">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">Blockchain Security</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Immutable transaction records and smart contracts ensure complete transparency and security</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-shield-alt text-indigo-500 mr-2"></i>256-bit encryption</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-link text-indigo-500 mr-2"></i>Immutable audit trail</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-file-contract text-indigo-500 mr-2"></i>Smart contract automation</li>
+                </ul>
+            </div>
+            
+            <div class="info-card p-8 text-center scale-in delay-200" data-card="ai">
+                <div class="simple-icon-hover text-6xl text-pink-500 mb-6">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">AI-Powered Analytics</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Machine learning algorithms optimize subsidy allocation and predict project success rates</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-brain text-pink-500 mr-2"></i>Predictive modeling</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-chart-line text-pink-500 mr-2"></i>Risk assessment</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-cogs text-pink-500 mr-2"></i>Process optimization</li>
+                </ul>
+            </div>
+            
+            <div class="info-card p-8 text-center scale-in delay-400" data-card="cloud">
+                <div class="simple-icon-hover text-6xl text-teal-500 mb-6">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">Cloud Infrastructure</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Scalable, secure cloud platform with 99.9% uptime and global accessibility</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-server text-teal-500 mr-2"></i>Auto-scaling architecture</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-globe text-teal-500 mr-2"></i>Global CDN</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-backup text-teal-500 mr-2"></i>Real-time backups</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sustainability Goals -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-8 text-center text-slate-800">Sustainability Goals</h2>
+        <p class="text-xl text-center text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+            Aligned with UN Sustainable Development Goals and Paris Climate Agreement targets
+        </p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🎯</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Carbon Neutral by 2030</h4>
+                <p class="text-slate-600 text-sm">Supporting global carbon neutrality through green hydrogen adoption</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">♻️</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Circular Economy</h4>
+                <p class="text-slate-600 text-sm">Promoting renewable energy cycles and sustainable production</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🌱</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Green Jobs</h4>
+                <p class="text-slate-600 text-sm">Creating sustainable employment in the clean energy sector</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🌍</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Global Impact</h4>
+                <p class="text-slate-600 text-sm">Scaling solutions worldwide for maximum environmental benefit</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    {% if not current_user.is_authenticated %}
+    <div class="text-center mb-20">
+        <div class="process-flow-light p-12 mx-4">
+            <h2 class="text-4xl font-bold mb-6 text-slate-800">Ready to Transform the Future?</h2>
+            <p class="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+                Join thousands of organizations already using SmartHydroPay to accelerate green hydrogen adoption and build a sustainable future.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="{{ url_for('auth.signup') }}" class="btn-3d-light inline-block">
+                    <i class="fas fa-rocket mr-2"></i>Start Your Journey Today
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn-3d-light inline-block" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), 0 2px 8px rgba(236, 72, 153, 0.15);">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Access Your Dashboard
+                </a>
+            </div>
+        </div>
     </div>
     {% endif %}
 </div>
@@ -588,6 +973,9 @@ class Factory {
 function animateOnScrollLight() {
     const cards = document.querySelectorAll('.card-3d-light');
     const processSteps = document.querySelectorAll('.process-step-light');
+    const fadeElements = document.querySelectorAll('.fade-in-section');
+    const scaleElements = document.querySelectorAll('.scale-in');
+    const slideElements = document.querySelectorAll('.slide-in-left, .slide-in-right');
     
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, index) => {
@@ -595,12 +983,15 @@ function animateOnScrollLight() {
                 setTimeout(() => {
                     entry.target.style.opacity = '1';
                     entry.target.style.transform = 'translateY(0) scale(1)';
+                    entry.target.classList.add('visible');
                 }, index * 150);
             }
         });
     }, { threshold: 0.1 });
     
-    [...cards, ...processSteps].forEach(el => {
+    // Observe new animation elements
+    const allElements = [...cards, ...processSteps, ...fadeElements, ...scaleElements, ...slideElements];
+    allElements.forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(50px) scale(0.95)';
         el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
@@ -630,6 +1021,25 @@ document.addEventListener('DOMContentLoaded', () => {
     initLightParticles();
     animateOnScrollLight();
     initLightParallax();
+    
+    // Initialize fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all animation elements
+    document.querySelectorAll('.fade-in-section, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+        fadeObserver.observe(el);
+    });
     
     // Initialize 3D models
     setTimeout(() => {
