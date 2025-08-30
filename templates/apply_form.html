@@ -39,11 +39,11 @@
         </div>
 
         <div class="mb-6">
-            {{ form.documents.label(class="block text-gray-700 text-sm font-bold mb-2") }}
-            {{ form.documents(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500", rows="6") }}
-            {% if form.documents.errors %}
+            {{ form.project_details.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            {{ form.project_details(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500", rows="6") }}
+            {% if form.project_details.errors %}
                 <div class="text-red-500 text-sm mt-1">
-                    {% for error in form.documents.errors %}
+                    {% for error in form.project_details.errors %}
                         <p>{{ error }}</p>
                     {% endfor %}
                 </div>
@@ -51,14 +51,9 @@
             <p class="text-gray-500 text-xs mt-1">Provide detailed project information, technical specifications, financial projections, and any supporting documentation</p>
         </div>
         <div class="mb-6">
-            <label class="block text-gray-700 text-sm font-bold mb-2" for="pdf_file">Upload PDF Document</label>
-            <div class="relative group">
-                <input type="file" id="pdf_file" name="pdf_file" accept="application/pdf" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500 transition-all duration-300 ease-in-out group-hover:shadow-lg" />
-                <div class="absolute inset-0 pointer-events-none flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <i class="fas fa-file-pdf text-5xl text-red-500 animate-bounce"></i>
-                </div>
-            </div>
-            <p class="text-blue-500 text-xs mt-1">Attach a PDF with supporting documents, technical drawings, or financials (optional)</p>
+            {{ form.document_files.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            {{ form.document_files(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-blue-500", multiple=true) }}
+            <p class="text-blue-500 text-xs mt-1">Attach PDFs, images, or other supporting documents (optional, multiple allowed)</p>
         </div>
 
         <div class="bg-blue-50 p-4 rounded-lg mb-6">

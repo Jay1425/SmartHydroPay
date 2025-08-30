@@ -42,6 +42,15 @@ def create_app():
     app.register_blueprint(auth, url_prefix='/auth')
     app.register_blueprint(producer, url_prefix='/producer')
     app.register_blueprint(auditor, url_prefix='/auditor')
+
+    # Add Jinja2 filter for JSON parsing
+    import json
+    @app.template_filter('loads')
+    def jinja2_loads_filter(s):
+        try:
+            return json.loads(s)
+        except Exception:
+            return []
     app.register_blueprint(government, url_prefix='/government')
     app.register_blueprint(bank, url_prefix='/bank')
     

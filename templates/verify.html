@@ -69,9 +69,41 @@
             </div>
         </div>
         <div class="mt-4">
-            <p class="text-sm text-gray-600">Project Details & Documents</p>
+            <p class="text-sm text-gray-600 font-bold">Project Details</p>
             <div class="bg-white p-3 rounded border mt-1">
-                <pre class="whitespace-pre-wrap text-sm">{{ application.documents }}</pre>
+                <p class="text-gray-700">{{ application.project_details }}</p>
+            </div>
+        </div>
+        <div class="mt-6">
+            <p class="text-sm text-gray-600 font-bold">Uploaded Documents</p>
+            <div class="bg-white p-3 rounded border mt-1">
+                {% set docs = [] %}
+                {% if application.documents %}
+                    {% if application.documents.startswith('[') %}
+                        {% set docs = application.documents | safe | loads %}
+                    {% else %}
+                        {% set docs = [application.documents] %}
+                    {% endif %}
+                {% endif %}
+                {% if docs %}
+                    <ul class="list-disc pl-5">
+                        {% for doc in docs %}
+                            <li>
+                                {% if doc.endswith('.pdf') %}
+                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">PDF Document</a>
+                                {% elif doc.endswith('.jpg') or doc.endswith('.jpeg') or doc.endswith('.png') %}
+                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">Image</a>
+                                    <br>
+                                    <img src="{{ url_for('static', filename=doc) }}" alt="Document Image" class="mt-2 max-h-40 border rounded">
+                                {% else %}
+                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">{{ doc }}</a>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <span class="text-gray-400">No documents uploaded.</span>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, FloatField, BooleanField
+from flask_wtf.file import FileField
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
 
 class LoginForm(FlaskForm):
@@ -32,7 +33,8 @@ class EditProfileForm(FlaskForm):
 class ApplicationForm(FlaskForm):
     project_name = StringField('Project Name', validators=[DataRequired(), Length(min=2, max=200)])
     capacity = FloatField('Capacity (MW)', validators=[DataRequired(), NumberRange(min=0.1)])
-    documents = TextAreaField('Documents/Details', validators=[DataRequired()])
+    project_details = TextAreaField('Project Details', validators=[Optional()])
+    document_files = FileField('Upload Documents', render_kw={"multiple": True})
 
 class AuditForm(FlaskForm):
     comments = TextAreaField('Audit Comments', validators=[DataRequired()])

@@ -36,6 +36,7 @@ class Application(db.Model):
     producer_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     project_name = db.Column(db.String(200), nullable=False)
     capacity = db.Column(db.Float, nullable=False)
+    project_details = db.Column(db.Text)  # Project details text
     documents = db.Column(db.Text)  # JSON string or file paths
     status = db.Column(db.String(50), default='pending')  # pending, auditor_verified, govt_approved, fund_released
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
