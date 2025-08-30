@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Application{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="text-center mb-6">
+        <i class="fas fa-file-plus text-4xl text-green-500 mb-4"></i>
+        <h2 class="text-2xl font-bold text-gray-800">Submit Subsidy Application</h2>
+        <p class="text-gray-600">Apply for green hydrogen project subsidy</p>
+    </div>
+
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="mb-4">
+            {{ form.project_name.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            {{ form.project_name(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500") }}
+            {% if form.project_name.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.project_name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-4">
+            {{ form.capacity.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            {{ form.capacity(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500", step="0.1") }}
+            {% if form.capacity.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.capacity.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="text-gray-500 text-xs mt-1">Enter the project capacity in Megawatts (MW)</p>
+        </div>
+
+        <div class="mb-6">
+            {{ form.documents.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            {{ form.documents(class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500", rows="6") }}
+            {% if form.documents.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.documents.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            <p class="text-gray-500 text-xs mt-1">Provide detailed project information, technical specifications, financial projections, and any supporting documentation</p>
+        </div>
+
+        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+            <h4 class="font-semibold text-blue-800 mb-2">Application Process:</h4>
+            <ul class="text-sm text-blue-700 space-y-1">
+                <li>• Your application will be reviewed by an auditor</li>
+                <li>• Upon auditor verification, it goes to government for approval</li>
+                <li>• Approved applications are forwarded to banks for fund disbursement</li>
+                <li>• You can track the status in your dashboard</li>
+            </ul>
+        </div>
+
+        <div class="flex space-x-4">
+            <button type="submit" class="flex-1 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500">
+                <i class="fas fa-paper-plane mr-2"></i>Submit Application
+            </button>
+            <a href="{{ url_for('main.dashboard') }}" class="flex-1 bg-gray-600 text-white py-2 px-4 rounded-lg hover:bg-gray-700 text-center">
+                <i class="fas fa-arrow-left mr-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

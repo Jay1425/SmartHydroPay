@@ -1,0 +1,241 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-2">
+        <i class="fas fa-tachometer-alt mr-2"></i>Dashboard
+    </h1>
+    <p class="text-gray-600">Welcome back, {{ current_user.name }} ({{ current_user.role.title() }})</p>
+</div>
+
+{% if current_user.role == 'producer' %}
+    <!-- Producer Dashboard -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-plus text-green-500 mr-2"></i>Quick Actions
+            </h3>
+            <a href="{{ url_for('producer.apply') }}" class="block bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-center">
+                Submit New Application
+            </a>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-chart-bar text-blue-500 mr-2"></i>Application Stats
+            </h3>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span>Total Applications:</span>
+                    <span class="font-bold">{{ applications|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Pending:</span>
+                    <span class="text-yellow-600">{{ applications|selectattr('status', 'equalto', 'pending')|list|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Approved:</span>
+                    <span class="text-green-600">{{ applications|selectattr('status', 'equalto', 'govt_approved')|list|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-file-alt mr-2"></i>Your Applications
+        </h3>
+        {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2 text-left">Project Name</th>
+                            <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                            <th class="px-4 py-2 text-left">Status</th>
+                            <th class="px-4 py-2 text-left">Submitted</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ app.project_name }}</td>
+                            <td class="px-4 py-2">{{ app.capacity }}</td>
+                            <td class="px-4 py-2">
+                                <span class="px-2 py-1 rounded text-xs
+                                    {% if app.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                    {% elif app.status == 'auditor_verified' %}bg-blue-100 text-blue-800
+                                    {% elif app.status == 'govt_approved' %}bg-green-100 text-green-800
+                                    {% elif app.status == 'fund_released' %}bg-purple-100 text-purple-800
+                                    {% else %}bg-red-100 text-red-800{% endif %}">
+                                    {{ app.status.replace('_', ' ').title() }}
+                                </span>
+                            </td>
+                            <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications submitted yet. <a href="{{ url_for('producer.apply') }}" class="text-blue-600">Submit your first application</a></p>
+        {% endif %}
+    </div>
+
+{% elif current_user.role == 'auditor' %}
+    <!-- Auditor Dashboard -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-search mr-2"></i>Applications Pending Verification
+        </h3>
+        {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2 text-left">Project Name</th>
+                            <th class="px-4 py-2 text-left">Producer</th>
+                            <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                            <th class="px-4 py-2 text-left">Submitted</th>
+                            <th class="px-4 py-2 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ app.project_name }}</td>
+                            <td class="px-4 py-2">{{ app.producer.name }}</td>
+                            <td class="px-4 py-2">{{ app.capacity }}</td>
+                            <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ url_for('auditor.verify', application_id=app.id) }}" 
+                                   class="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700 text-sm">
+                                    Verify
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications pending verification.</p>
+        {% endif %}
+    </div>
+
+{% elif current_user.role == 'government' %}
+    <!-- Government Dashboard -->
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-check-circle mr-2"></i>Applications Ready for Approval
+        </h3>
+        {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2 text-left">Project Name</th>
+                            <th class="px-4 py-2 text-left">Producer</th>
+                            <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                            <th class="px-4 py-2 text-left">Verified</th>
+                            <th class="px-4 py-2 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ app.project_name }}</td>
+                            <td class="px-4 py-2">{{ app.producer.name }}</td>
+                            <td class="px-4 py-2">{{ app.capacity }}</td>
+                            <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ url_for('government.view_application', application_id=app.id) }}" 
+                                   class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm mr-2">
+                                    View
+                                </a>
+                                <a href="{{ url_for('government.approve', application_id=app.id) }}" 
+                                   class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
+                                    Approve
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications ready for approval.</p>
+        {% endif %}
+    </div>
+
+{% elif current_user.role == 'bank' %}
+    <!-- Bank Dashboard -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-chart-bar text-green-500 mr-2"></i>Fund Release Stats
+            </h3>
+            <div class="space-y-2">
+                <div class="flex justify-between">
+                    <span>Pending Releases:</span>
+                    <span class="font-bold text-orange-600">{{ applications|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Total Released:</span>
+                    <span class="font-bold text-green-600">{{ transactions|length }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <h3 class="text-lg font-semibold mb-4">
+                <i class="fas fa-dollar-sign text-blue-500 mr-2"></i>Quick Actions
+            </h3>
+            <a href="{{ url_for('bank.pending_releases') }}" class="block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 text-center">
+                View Pending Releases
+            </a>
+        </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow-md p-6">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-clock mr-2"></i>Applications Ready for Fund Release
+        </h3>
+        {% if applications %}
+            <div class="overflow-x-auto">
+                <table class="w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-50">
+                            <th class="px-4 py-2 text-left">Project Name</th>
+                            <th class="px-4 py-2 text-left">Producer</th>
+                            <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                            <th class="px-4 py-2 text-left">Approved</th>
+                            <th class="px-4 py-2 text-left">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for app in applications %}
+                        <tr class="border-t">
+                            <td class="px-4 py-2">{{ app.project_name }}</td>
+                            <td class="px-4 py-2">{{ app.producer.name }}</td>
+                            <td class="px-4 py-2">{{ app.capacity }}</td>
+                            <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                            <td class="px-4 py-2">
+                                <a href="{{ url_for('bank.release', application_id=app.id) }}" 
+                                   class="bg-orange-600 text-white px-3 py-1 rounded hover:bg-orange-700 text-sm">
+                                    Release Funds
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications ready for fund release.</p>
+        {% endif %}
+    </div>
+{% endif %}
+{% endblock %}

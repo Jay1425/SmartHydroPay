@@ -1,0 +1,65 @@
+/* Custom styles for SmartHydroPay */
+
+/* Progress bar animations */
+.progress-bar {
+    transition: width 0.3s ease-in-out;
+}
+
+/* Hover effects */
+.hover-lift:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s ease;
+}
+
+/* Status badges */
+.status-pending {
+    background-color: #fef3c7;
+    color: #d97706;
+}
+
+.status-verified {
+    background-color: #dbeafe;
+    color: #2563eb;
+}
+
+.status-approved {
+    background-color: #dcfce7;
+    color: #16a34a;
+}
+
+.status-released {
+    background-color: #f3e8ff;
+    color: #9333ea;
+}
+
+.status-rejected {
+    background-color: #fee2e2;
+    color: #dc2626;
+}
+
+/* Card shadows */
+.card-shadow {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.card-shadow:hover {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a1a1a1;
+}

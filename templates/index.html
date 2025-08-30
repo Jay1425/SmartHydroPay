@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="text-center">
+    <div class="mb-8">
+        <i class="fas fa-leaf text-6xl text-green-500 mb-4"></i>
+        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to SmartHydroPay</h1>
+        <p class="text-xl text-gray-600 mb-8">Smart Subsidy Management System for Green Hydrogen Projects</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <i class="fas fa-building text-3xl text-blue-500 mb-4"></i>
+            <h3 class="text-lg font-semibold mb-2">Government Bodies</h3>
+            <p class="text-gray-600">Approve subsidy applications and monitor funds distribution</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <i class="fas fa-industry text-3xl text-green-500 mb-4"></i>
+            <h3 class="text-lg font-semibold mb-2">Producers</h3>
+            <p class="text-gray-600">Submit subsidy applications for green hydrogen projects</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <i class="fas fa-search text-3xl text-purple-500 mb-4"></i>
+            <h3 class="text-lg font-semibold mb-2">Auditors</h3>
+            <p class="text-gray-600">Verify and audit producer applications before approval</p>
+        </div>
+        
+        <div class="bg-white p-6 rounded-lg shadow-md">
+            <i class="fas fa-university text-3xl text-orange-500 mb-4"></i>
+            <h3 class="text-lg font-semibold mb-2">Banks</h3>
+            <p class="text-gray-600">Disburse approved subsidy funds to producers</p>
+        </div>
+    </div>
+
+    <div class="bg-white p-8 rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold mb-4">How It Works</h2>
+        <div class="flex flex-wrap justify-center items-center space-x-4 text-sm">
+            <div class="flex items-center mb-4">
+                <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">1</span>
+                <span>Producer Submits Application</span>
+            </div>
+            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
+            <div class="flex items-center mb-4">
+                <span class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">2</span>
+                <span>Auditor Verifies</span>
+            </div>
+            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
+            <div class="flex items-center mb-4">
+                <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">3</span>
+                <span>Government Approves</span>
+            </div>
+            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
+            <div class="flex items-center mb-4">
+                <span class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">4</span>
+                <span>Bank Releases Funds</span>
+            </div>
+        </div>
+    </div>
+
+    {% if not current_user.is_authenticated %}
+    <div class="mt-8">
+        <a href="{{ url_for('auth.signup') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mr-4">
+            <i class="fas fa-user-plus mr-2"></i>Get Started
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
+            <i class="fas fa-sign-in-alt mr-2"></i>Login
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Release Funds{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+    <div class="text-center mb-6">
+        <i class="fas fa-money-bill-wave text-4xl text-green-500 mb-4"></i>
+        <h2 class="text-2xl font-bold text-gray-800">Release Subsidy Funds</h2>
+        <p class="text-gray-600">Disburse approved subsidy to producer</p>
+    </div>
+
+    <!-- Application Summary -->
+    <div class="bg-gray-50 p-4 rounded-lg mb-6">
+        <h3 class="text-lg font-semibold mb-4">Application Summary</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <p class="text-sm text-gray-600">Project Name</p>
+                <p class="font-semibold">{{ application.project_name }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Producer</p>
+                <p class="font-semibold">{{ application.producer.name }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Producer Email</p>
+                <p class="font-semibold">{{ application.producer.email }}</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Capacity</p>
+                <p class="font-semibold">{{ application.capacity }} MW</p>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Status</p>
+                <span class="px-2 py-1 rounded text-xs bg-green-100 text-green-800">
+                    {{ application.status.replace('_', ' ').title() }}
+                </span>
+            </div>
+            <div>
+                <p class="text-sm text-gray-600">Approved Date</p>
+                <p class="font-semibold">{{ application.created_at.strftime('%Y-%m-%d') }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fund Release Form -->
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        
+        <div class="mb-4">
+            {{ form.amount.label(class="block text-gray-700 text-sm font-bold mb-2") }}
+            <div class="relative">
+                <span class="absolute left-3 top-2 text-gray-500">$</span>
+                {{ form.amount(class="w-full pl-8 pr-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500", step="0.01", placeholder="0.00") }}
+            </div>
+            {% if form.amount.errors %}
+                <div class="text-red-500 text-sm mt-1">
+                    {% for error in form.amount.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="bg-blue-50 p-4 rounded-lg mb-6">
+            <h4 class="font-semibold text-blue-800 mb-2">
+                <i class="fas fa-info-circle mr-2"></i>Recommended Amount
+            </h4>
+            <p class="text-blue-700">
+                Based on project capacity of {{ application.capacity }} MW:
+                <span class="font-bold">${{ (application.capacity * 100000)|round(0)|format_number }}</span>
+            </p>
+            <p class="text-sm text-blue-600 mt-1">Standard rate: $100,000 per MW</p>
+            <button type="button" onclick="setRecommendedAmount()" class="mt-2 text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">
+                Use Recommended Amount
+            </button>
+        </div>
+
+        <div class="bg-yellow-50 p-4 rounded-lg mb-6">
+            <h4 class="font-semibold text-yellow-800 mb-2">
+                <i class="fas fa-exclamation-triangle mr-2"></i>Fund Release Confirmation
+            </h4>
+            <ul class="text-sm text-yellow-700 space-y-1">
+                <li>• Verify all application details and audit reports</li>
+                <li>• Ensure government approval is valid</li>
+                <li>• Confirm producer bank account details</li>
+                <li>• This action cannot be undone</li>
+            </ul>
+        </div>
+
+        <div class="flex space-x-4">
+            <button type="submit" class="flex-1 bg-green-600 text-white py-3 px-4 rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-semibold">
+                <i class="fas fa-check mr-2"></i>Release Funds
+            </button>
+            <a href="{{ url_for('bank.transactions') }}" class="flex-1 bg-gray-600 text-white py-3 px-4 rounded-lg hover:bg-gray-700 text-center font-semibold">
+                <i class="fas fa-arrow-left mr-2"></i>Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<script>
+function setRecommendedAmount() {
+    const recommendedAmount = {{ application.capacity * 100000 }};
+    document.getElementById('{{ form.amount.id }}').value = recommendedAmount.toFixed(2);
+}
+
+// Format number display
+function formatNumber(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+</script>
+{% endblock %}
