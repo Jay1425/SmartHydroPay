@@ -43,7 +43,7 @@
                             <span class="font-semibold text-blue-600">{{ app.capacity }} MW</span>
                         </td>
                         <td class="px-4 py-2">
-                            <span class="font-semibold text-green-600">${{ (app.capacity * 100000)|round(0)|format_number }}</span>
+                            <span class="font-semibold text-green-600">${{ (app.capacity * 100000)|round|int | string | replace(',', '_') }}</span>
                         </td>
                         <td class="px-4 py-2">
                             <p class="text-sm">{{ app.created_at.strftime('%Y-%m-%d') }}</p>
