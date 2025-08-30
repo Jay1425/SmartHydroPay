@@ -14,6 +14,10 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///smarthydropay.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
+    # File upload configuration
+    app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max file size
+    app.config['UPLOAD_FOLDER'] = os.path.join(os.path.dirname(app.root_path), 'static', 'uploads')
+    
     # Initialize extensions
     db.init_app(app)
     login_manager.init_app(app)

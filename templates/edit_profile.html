@@ -333,6 +333,109 @@
         font-style: italic;
     }
 
+    /* Photo upload styling */
+    .photo-upload-container {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 16px;
+        border: 2px dashed rgba(16, 185, 129, 0.3);
+        transition: all 0.3s ease;
+    }
+
+    .photo-upload-container:hover {
+        border-color: rgba(16, 185, 129, 0.5);
+        background: rgba(255, 255, 255, 0.7);
+    }
+
+    .current-photo-display {
+        flex-shrink: 0;
+    }
+
+    .current-photo {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+    }
+
+    .current-photo:hover {
+        transform: scale(1.05);
+        border-color: rgba(16, 185, 129, 0.6);
+    }
+
+    .photo-upload-controls {
+        flex: 1;
+        text-align: center;
+    }
+
+    .photo-input {
+        display: none;
+    }
+
+    .photo-upload-btn {
+        display: inline-block;
+        background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 12px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        font-family: 'Inter', sans-serif;
+        box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+    }
+
+    .photo-upload-btn:hover {
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
+    }
+
+    .photo-preview {
+        margin-top: 1rem;
+        position: relative;
+        display: inline-block;
+    }
+
+    .photo-preview img {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 2px solid rgba(16, 185, 129, 0.6);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .remove-preview {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: #ef4444;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 24px;
+        height: 24px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        transition: all 0.2s ease;
+    }
+
+    .remove-preview:hover {
+        background: #dc2626;
+        transform: scale(1.1);
+    }
+
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .profile-hero-section {
@@ -351,6 +454,17 @@
         
         .profile-icon-3d-light {
             font-size: 3rem;
+        }
+
+        .photo-upload-container {
+            flex-direction: column;
+            gap: 1rem;
+            text-align: center;
+        }
+
+        .current-photo {
+            width: 80px;
+            height: 80px;
         }
     }
 </style>
@@ -387,8 +501,42 @@
                 {% endif %}
             {% endwith %}
             
-            <form method="POST" novalidate>
+            <form method="POST" enctype="multipart/form-data" novalidate>
                 {{ form.hidden_tag() }}
+                
+                <!-- Profile Photo Upload Section -->
+                <div class="profile-form-group profile-form-full mb-6">
+                    <label class="profile-label">Profile Photo</label>
+                    <div class="photo-upload-container">
+                        <div class="current-photo-display">
+                            {% if current_user.profile_photo and current_user.profile_photo != 'default_avatar.svg' %}
+                                <img src="{{ url_for('static', filename='uploads/profile_photos/' + current_user.profile_photo) }}" 
+                                     alt="Current Photo" class="current-photo">
+                            {% else %}
+                                <img src="{{ url_for('static', filename='uploads/profile_photos/default_avatar.svg') }}" 
+                                     alt="Default Avatar" class="current-photo">
+                            {% endif %}
+                        </div>
+                        <div class="photo-upload-controls">
+                            {{ form.profile_photo(class="photo-input", id="photo-input", accept="image/*") }}
+                            <label for="photo-input" class="photo-upload-btn">
+                                <i class="fas fa-camera mr-2"></i>Choose New Photo
+                            </label>
+                            <div class="photo-preview" id="photo-preview" style="display: none;">
+                                <img id="preview-image" alt="Preview">
+                                <button type="button" class="remove-preview" onclick="removePreview()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% if form.profile_photo.errors %}
+                        {% for error in form.profile_photo.errors %}
+                            <div class="profile-error">{{ error }}</div>
+                        {% endfor %}
+                    {% endif %}
+                    <div class="profile-help-text">Upload a photo (JPG, PNG, GIF). Max size: 5MB</div>
+                </div>
                 
                 <div class="profile-form-grid">
                     <!-- Full Name -->
@@ -554,11 +702,57 @@ function initBioCounter() {
     }
 }
 
+// Photo upload preview functionality
+function initPhotoPreview() {
+    const photoInput = document.getElementById('photo-input');
+    const previewContainer = document.getElementById('photo-preview');
+    const previewImage = document.getElementById('preview-image');
+    
+    if (photoInput) {
+        photoInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file type
+                if (!file.type.match('image.*')) {
+                    alert('Please select a valid image file.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image size must be less than 5MB.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImage.src = e.target.result;
+                    previewContainer.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    }
+}
+
+// Remove photo preview
+function removePreview() {
+    const photoInput = document.getElementById('photo-input');
+    const previewContainer = document.getElementById('photo-preview');
+    
+    photoInput.value = '';
+    previewContainer.style.display = 'none';
+}
+
 // Initialize all features
 document.addEventListener('DOMContentLoaded', () => {
     initProfileLightParticles();
     enhanceProfileForm();
     initBioCounter();
+    initPhotoPreview();
     
     // Periodic particle refresh
     setInterval(() => {

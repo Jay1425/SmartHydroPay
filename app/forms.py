@@ -1,4 +1,5 @@
 from flask_wtf import FlaskForm
+from flask_wtf.file import FileField, FileAllowed
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, FloatField, BooleanField
 from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
 
@@ -24,6 +25,9 @@ class EditProfileForm(FlaskForm):
     phone = StringField('Phone Number', validators=[Optional(), Length(min=10, max=15)])
     organization = StringField('Organization/Company', validators=[Optional(), Length(max=200)])
     bio = TextAreaField('Bio/Description', validators=[Optional(), Length(max=500)])
+    profile_photo = FileField('Profile Photo', validators=[
+        FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Only image files are allowed!')
+    ])
 
 class ApplicationForm(FlaskForm):
     project_name = StringField('Project Name', validators=[DataRequired(), Length(min=2, max=200)])

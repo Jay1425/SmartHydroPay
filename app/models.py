@@ -13,6 +13,7 @@ class User(UserMixin, db.Model):
     phone = db.Column(db.String(15), nullable=True)
     organization = db.Column(db.String(200), nullable=True)
     bio = db.Column(db.Text, nullable=True)
+    profile_photo = db.Column(db.String(200), nullable=True, default='default_avatar.svg')
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
