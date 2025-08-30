@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SelectField, TextAreaField, FloatField, BooleanField
-from wtforms.validators import DataRequired, Email, Length, NumberRange
+from wtforms.validators import DataRequired, Email, Length, NumberRange, Optional
 
 class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -16,6 +16,14 @@ class SignupForm(FlaskForm):
         ('auditor', 'Auditor'),
         ('bank', 'Bank')
     ], validators=[DataRequired()])
+
+class EditProfileForm(FlaskForm):
+    name = StringField('Full Name', validators=[DataRequired(), Length(min=2, max=100)])
+    email = StringField('Email Address', validators=[DataRequired(), Email()])
+    password = PasswordField('New Password', validators=[Optional(), Length(min=6)])
+    phone = StringField('Phone Number', validators=[Optional(), Length(min=10, max=15)])
+    organization = StringField('Organization/Company', validators=[Optional(), Length(max=200)])
+    bio = TextAreaField('Bio/Description', validators=[Optional(), Length(max=500)])
 
 class ApplicationForm(FlaskForm):
     project_name = StringField('Project Name', validators=[DataRequired(), Length(min=2, max=200)])

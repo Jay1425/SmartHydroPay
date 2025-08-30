@@ -16,6 +16,9 @@ def edit_profile():
     if form.validate_on_submit():
         current_user.name = form.name.data
         current_user.email = form.email.data
+        current_user.phone = form.phone.data
+        current_user.organization = form.organization.data
+        current_user.bio = form.bio.data
         if form.password.data:
             current_user.set_password(form.password.data)
         from app import db

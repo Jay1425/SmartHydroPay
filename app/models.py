@@ -10,6 +10,11 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
     role = db.Column(db.String(50), nullable=False)  # government, producer, auditor, bank
+    phone = db.Column(db.String(15), nullable=True)
+    organization = db.Column(db.String(200), nullable=True)
+    bio = db.Column(db.Text, nullable=True)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
     # Relationships
     applications = db.relationship('Application', backref='producer', lazy=True)
