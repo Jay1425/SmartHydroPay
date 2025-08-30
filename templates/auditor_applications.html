@@ -28,9 +28,35 @@
                     <tr class="border-t hover:bg-gray-50">
                         <td class="px-4 py-2">
                             <div>
-                                <p class="font-semibold">{{ app.project_name }}</p>
-                                <p class="text-xs text-gray-500">ID: {{ app.id }}</p>
-                                <p class="text-sm text-gray-600 mt-1">{{ app.documents[:100] }}...</p>
+                                <p class="font-semibold">Project Details:</p>
+                                <p class="text-sm text-gray-600 mt-1">{{ app.project_details }}</p>
+                                {% set docs = [] %}
+                                {% if app.documents %}
+                                    {% if app.documents.startswith('[') %}
+                                        {% set docs = app.documents | safe | loads %}
+                                    {% else %}
+                                        {% set docs = [app.documents] %}
+                                    {% endif %}
+                                {% endif %}
+                                {% if docs and docs[0] %}
+                                    <ul class="list-disc pl-5 mt-1">
+                                        {% for doc in docs %}
+                                            {% if doc %}
+                                            <li>
+                                                {% if doc.endswith('.pdf') %}
+                                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">PDF Document</a>
+                                                {% elif doc.endswith('.jpg') or doc.endswith('.jpeg') or doc.endswith('.png') %}
+                                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">Image</a>
+                                                {% else %}
+                                                    <a href="{{ url_for('static', filename=doc) }}" target="_blank" class="text-blue-600 hover:underline">{{ doc }}</a>
+                                                {% endif %}
+                                            </li>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    <span class="text-gray-400 text-xs">No documents uploaded.</span>
+                                {% endif %}
                             </div>
                         </td>
                         <td class="px-4 py-2">
