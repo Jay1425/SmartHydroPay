@@ -4,4 +4,5 @@ Flask-WTF==1.1.1
 Flask-Login==0.6.3
 WTForms==3.0.1
 Werkzeug==2.3.7
-flask-mail==2.1.0
+Flask-Mail==0.10.0
+email_validator
