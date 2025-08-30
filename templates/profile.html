@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="max-w-xl mx-auto mt-12">
+    <div class="card-3d-light p-8 text-center mb-8">
+        <div class="icon-3d-light text-6xl text-blue-500 mb-4">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <h2 class="text-2xl font-bold mb-2">{{ current_user.name }}</h2>
+        <p class="text-gray-600 mb-2">Role: <span class="font-semibold">{{ current_user.role.title() }}</span></p>
+        <p class="text-gray-600 mb-2">Email: <span class="font-semibold">{{ current_user.email }}</span></p>
+        <a href="{{ url_for('main.edit_profile') }}" class="btn-3d-light inline-block mt-4">
+            <i class="fas fa-edit mr-2"></i>Edit Profile
+        </a>
+    </div>
+</div>
+{% endblock %}

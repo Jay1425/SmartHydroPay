@@ -99,7 +99,17 @@
         {% endif %}
     </div>
     <div class="dashboard-title">Dashboard</div>
-    <div class="dashboard-welcome">Welcome back, {{ current_user.name }} ({{ current_user.role.title() }})</div>
+    <div class="dashboard-welcome">
+        Welcome back, <a href="{{ url_for('main.profile') }}" class="text-blue-600 hover:underline font-bold transition-all duration-200">{{ current_user.name }}</a> ({{ current_user.role.title() }})
+    </div>
+    <div class="flex justify-center gap-4 mt-6">
+        <a href="{{ url_for('main.profile') }}" class="btn-3d-light inline-block">
+            <i class="fas fa-user mr-2"></i>View Profile
+        </a>
+        <a href="{{ url_for('main.edit_profile') }}" class="btn-3d-light inline-block">
+            <i class="fas fa-user-edit mr-2"></i>Edit Profile
+        </a>
+    </div>
 </div>
 
 {% if current_user.role == 'producer' %}

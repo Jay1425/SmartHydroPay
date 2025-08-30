@@ -53,10 +53,10 @@
                         {% endif %}
                         
                         <div class="flex items-center space-x-4">
-                            <span class="text-sm bg-white/80 backdrop-blur-sm px-3 py-2 rounded-full border border-slate-200/50 shadow-sm">
+                            <a href="{{ url_for('main.profile') }}" class="text-sm bg-white/80 backdrop-blur-sm px-3 py-2 rounded-full border border-slate-200/50 shadow-sm hover:bg-blue-100 transition-all duration-200">
                                 <i class="fas fa-user mr-1 text-slate-500"></i>{{ current_user.name }} 
                                 <span class="text-xs bg-gradient-to-r from-green-500 to-blue-500 text-white px-2 py-1 rounded-full ml-2">{{ current_user.role.title() }}</span>
-                            </span>
+                            </a>
                             <a href="{{ url_for('auth.logout') }}" class="text-slate-600 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-300">
                                 <i class="fas fa-sign-out-alt mr-1"></i>Logout
                             </a>

@@ -1,8 +1,28 @@
-from flask import Blueprint, render_template, redirect, url_for
+from flask import Blueprint, render_template, redirect, url_for, request, flash
 from flask_login import login_required, current_user
 from app.models import Application, Audit, Transaction
 
 main = Blueprint('main', __name__)
+@main.route('/profile')
+@login_required
+def profile():
+    return render_template('profile.html')
+
+@main.route('/edit_profile', methods=['GET', 'POST'])
+@login_required
+def edit_profile():
+    from app.forms import EditProfileForm
+    form = EditProfileForm(obj=current_user)
+    if form.validate_on_submit():
+        current_user.name = form.name.data
+        current_user.email = form.email.data
+        if form.password.data:
+            current_user.set_password(form.password.data)
+        from app import db
+        db.session.commit()
+        flash('Profile updated successfully!', 'success')
+        return redirect(url_for('main.profile'))
+    return render_template('edit_profile.html', form=form)
 
 @main.route('/')
 def index():
