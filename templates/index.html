@@ -1,73 +1,728 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div class="text-center">
-    <div class="mb-8">
-        <i class="fas fa-leaf text-6xl text-green-500 mb-4"></i>
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Welcome to SmartHydroPay</h1>
-        <p class="text-xl text-gray-600 mb-8">Smart Subsidy Management System for Green Hydrogen Projects</p>
-    </div>
+<style>
+    .font-inter { font-family: 'Inter', sans-serif; }
+    
+    /* Light 3D Animation Styles */
+    .hero-section {
+        position: relative;
+        min-height: 85vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e1f5fe 25%, #e8f5e8 50%, #f3e5f5 75%, #fff3e0 100%);
+        overflow: hidden;
+    }
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <i class="fas fa-building text-3xl text-blue-500 mb-4"></i>
-            <h3 class="text-lg font-semibold mb-2">Government Bodies</h3>
-            <p class="text-gray-600">Approve subsidy applications and monitor funds distribution</p>
+    .floating-3d-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        color: #1e293b;
+        text-align: center;
+        padding: 100px 20px;
+    }
+
+    .floating-element {
+        animation: gentleFloat 8s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(2) { animation-delay: -2s; }
+    .floating-element:nth-child(3) { animation-delay: -4s; }
+
+    @keyframes gentleFloat {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-15px) scale(1.02); }
+    }
+
+    .card-3d-light {
+        background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.8));
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        transform-style: preserve-3d;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(203, 213, 225, 0.3);
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.04),
+            0 1px 8px rgba(0, 0, 0, 0.02),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .card-3d-light:hover {
+        transform: translateY(-12px) rotateX(2deg) rotateY(2deg) scale(1.02);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.08),
+            0 10px 20px rgba(0, 0, 0, 0.04),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(59, 130, 246, 0.2);
+    }
+
+    .process-flow-light {
+        background: linear-gradient(135deg, 
+            rgba(255,255,255,0.95) 0%, 
+            rgba(240,253,244,0.95) 25%, 
+            rgba(239,246,255,0.95) 50%, 
+            rgba(253,244,255,0.95) 75%, 
+            rgba(255,251,235,0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 32px;
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.04),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .process-step-light {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .process-step-light:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+        border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-3d-light {
+        background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 16px 32px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 8px 20px rgba(16, 185, 129, 0.2),
+            0 2px 8px rgba(59, 130, 246, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-3d-light:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 
+            0 12px 30px rgba(16, 185, 129, 0.3),
+            0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-3d-light::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-3d-light:hover::before {
+        left: 100%;
+    }
+
+    .icon-3d-light {
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: inline-block;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.06));
+    }
+
+    .icon-3d-light:hover {
+        transform: rotateY(360deg) scale(1.15);
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    }
+
+    .text-glow-light {
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .glass-effect-light {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Enhanced particle animation */
+    .particle-light {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6, #f59e0b);
+        animation: particleFloatLight 20s infinite linear;
+        opacity: 0.6;
+    }
+
+    @keyframes particleFloatLight {
+        0% {
+            transform: translateY(100vh) rotate(0deg) scale(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        90% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(-100vh) rotate(360deg) scale(0);
+            opacity: 0;
+        }
+    }
+
+    .wave-light {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff' fill-opacity='0.8'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        animation: waveLight 15s linear infinite;
+        opacity: 0.6;
+    }
+
+    @keyframes waveLight {
+        0% { background-position-x: 0; }
+        100% { background-position-x: 1200px; }
+    }
+
+    /* 3D Model Container */
+    .model-container {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .gradient-border {
+        background: linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6);
+        padding: 2px;
+        border-radius: 16px;
+    }
+
+    .gradient-border-inner {
+        background: white;
+        border-radius: 14px;
+        padding: 6px;
+    }
+</style>
+
+<!-- Hero Section with Light 3D Background -->
+<div class="hero-section">
+    <div class="floating-3d-container">
+        <!-- 3D Canvas for Hydrogen Molecule -->
+        <canvas id="hydrogenCanvas" class="model-container" style="top: 10%; left: 10%;"></canvas>
+        <!-- 3D Canvas for Solar Panel -->
+        <canvas id="solarCanvas" class="model-container" style="top: 20%; right: 15%;"></canvas>
+        <!-- 3D Canvas for Wind Turbine -->
+        <canvas id="windCanvas" class="model-container" style="bottom: 30%; left: 5%;"></canvas>
+        <!-- 3D Canvas for Factory -->
+        <canvas id="factoryCanvas" class="model-container" style="bottom: 10%; right: 10%;"></canvas>
+    </div>
+    
+    <div id="particleContainerLight"></div>
+    <div class="wave-light"></div>
+    
+    <div class="hero-content">
+        <div class="floating-element mb-12">
+            <div class="gradient-border inline-block mb-8">
+                <div class="gradient-border-inner">
+                    <div class="icon-3d-light text-8xl text-green-500">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                </div>
+            </div>
+            <h1 class="text-7xl font-bold text-glow-light mb-6">Welcome to SmartHydroPay</h1>
+            <p class="text-2xl mb-8 glass-effect-light p-6 rounded-full inline-block text-slate-700 font-medium">
+                Smart Subsidy Management System for Green Hydrogen Projects
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Light 3D Cards Section -->
+<div class="relative z-10 -mt-24">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 px-4">
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-blue-500 mb-6 group-hover:text-blue-600">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Government Bodies</h3>
+            <p class="text-slate-600 leading-relaxed">Approve subsidy applications and monitor funds distribution with transparency and efficiency</p>
+            <div class="mt-6 h-1 bg-gradient-to-r from-blue-400 to-blue-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <i class="fas fa-industry text-3xl text-green-500 mb-4"></i>
-            <h3 class="text-lg font-semibold mb-2">Producers</h3>
-            <p class="text-gray-600">Submit subsidy applications for green hydrogen projects</p>
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-green-500 mb-6 group-hover:text-green-600">
+                <i class="fas fa-industry"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Producers</h3>
+            <p class="text-slate-600 leading-relaxed">Submit subsidy applications for green hydrogen projects with streamlined processes</p>
+            <div class="mt-6 h-1 bg-gradient-to-r from-green-400 to-green-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <i class="fas fa-search text-3xl text-purple-500 mb-4"></i>
-            <h3 class="text-lg font-semibold mb-2">Auditors</h3>
-            <p class="text-gray-600">Verify and audit producer applications before approval</p>
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-purple-500 mb-6 group-hover:text-purple-600">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Auditors</h3>
+            <p class="text-slate-600 leading-relaxed">Verify and audit producer applications with comprehensive review processes</p>
+            <div class="mt-6 h-1 bg-gradient-to-r from-purple-400 to-purple-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
         </div>
         
-        <div class="bg-white p-6 rounded-lg shadow-md">
-            <i class="fas fa-university text-3xl text-orange-500 mb-4"></i>
-            <h3 class="text-lg font-semibold mb-2">Banks</h3>
-            <p class="text-gray-600">Disburse approved subsidy funds to producers</p>
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-orange-500 mb-6 group-hover:text-orange-600">
+                <i class="fas fa-university"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Banks</h3>
+            <p class="text-slate-600 leading-relaxed">Disburse approved subsidy funds to producers with secure financial processes</p>
+            <div class="mt-6 h-1 bg-gradient-to-r from-orange-400 to-orange-600 rounded-full transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
         </div>
     </div>
 
-    <div class="bg-white p-8 rounded-lg shadow-md">
-        <h2 class="text-2xl font-bold mb-4">How It Works</h2>
-        <div class="flex flex-wrap justify-center items-center space-x-4 text-sm">
-            <div class="flex items-center mb-4">
-                <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">1</span>
-                <span>Producer Submits Application</span>
+    <!-- Enhanced Light Process Flow -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">How It Works</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">1</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Submit Application</h3>
+                <p class="text-slate-600 leading-relaxed">Producer submits detailed application for green hydrogen project funding with comprehensive documentation</p>
             </div>
-            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
-            <div class="flex items-center mb-4">
-                <span class="bg-purple-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">2</span>
-                <span>Auditor Verifies</span>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">2</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Audit & Verify</h3>
+                <p class="text-slate-600 leading-relaxed">Independent auditors verify project details, compliance, and technical specifications thoroughly</p>
             </div>
-            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
-            <div class="flex items-center mb-4">
-                <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">3</span>
-                <span>Government Approves</span>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">3</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Government Approval</h3>
+                <p class="text-slate-600 leading-relaxed">Government bodies review and approve qualified applications based on policy guidelines</p>
             </div>
-            <i class="fas fa-arrow-right text-gray-400 mb-4"></i>
-            <div class="flex items-center mb-4">
-                <span class="bg-orange-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-2">4</span>
-                <span>Bank Releases Funds</span>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">4</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Fund Release</h3>
+                <p class="text-slate-600 leading-relaxed">Banks securely disburse approved subsidy amounts through verified financial channels</p>
             </div>
         </div>
     </div>
 
+    <!-- Light 3D Action Buttons -->
     {% if not current_user.is_authenticated %}
-    <div class="mt-8">
-        <a href="{{ url_for('auth.signup') }}" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 mr-4">
-            <i class="fas fa-user-plus mr-2"></i>Get Started
+    <div class="text-center mb-20">
+        <a href="{{ url_for('auth.signup') }}" class="btn-3d-light inline-block mr-8">
+            <i class="fas fa-user-plus mr-2"></i>Get Started Today
         </a>
-        <a href="{{ url_for('auth.login') }}" class="bg-gray-600 text-white px-6 py-3 rounded-lg hover:bg-gray-700">
-            <i class="fas fa-sign-in-alt mr-2"></i>Login
+        <a href="{{ url_for('auth.login') }}" class="btn-3d-light inline-block" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), 0 2px 8px rgba(236, 72, 153, 0.15);">
+            <i class="fas fa-sign-in-alt mr-2"></i>Login to Dashboard
         </a>
     </div>
     {% endif %}
 </div>
+
+<script>
+// Enhanced Light Particle Animation System
+function createLightParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'particle-light';
+    const size = Math.random() * 6 + 2;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+    return particle;
+}
+
+function initLightParticles() {
+    const container = document.getElementById('particleContainerLight');
+    for (let i = 0; i < 30; i++) {
+        container.appendChild(createLightParticle());
+    }
+}
+
+// 3D Model Renderers for Green Hydrogen Theme
+class HydrogenMolecule {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        // Create hydrogen molecule (H2)
+        this.group = new THREE.Group();
+        
+        // Hydrogen atoms
+        const atomGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+        const atomMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x10b981,
+            shininess: 100,
+            transparent: true,
+            opacity: 0.9
+        });
+        
+        const atom1 = new THREE.Mesh(atomGeometry, atomMaterial);
+        const atom2 = new THREE.Mesh(atomGeometry, atomMaterial);
+        atom1.position.set(-0.5, 0, 0);
+        atom2.position.set(0.5, 0, 0);
+        
+        // Bond
+        const bondGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+        const bondMaterial = new THREE.MeshPhongMaterial({ color: 0x3b82f6 });
+        const bond = new THREE.Mesh(bondGeometry, bondMaterial);
+        bond.rotation.z = Math.PI / 2;
+        
+        this.group.add(atom1, atom2, bond);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.z = 3;
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.x += 0.01;
+        this.group.rotation.y += 0.02;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class SolarPanel {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Solar panel
+        const panelGeometry = new THREE.BoxGeometry(2, 1.2, 0.1);
+        const panelMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x1e3a8a,
+            shininess: 80
+        });
+        const panel = new THREE.Mesh(panelGeometry, panelMaterial);
+        
+        // Support structure
+        const supportGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+        const supportMaterial = new THREE.MeshPhongMaterial({ color: 0x6b7280 });
+        const support = new THREE.Mesh(supportGeometry, supportMaterial);
+        support.position.y = -0.7;
+        
+        this.group.add(panel, support);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(2, 1, 3);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.y += 0.005;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class WindTurbine {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Tower
+        const towerGeometry = new THREE.CylinderGeometry(0.1, 0.15, 3, 8);
+        const towerMaterial = new THREE.MeshPhongMaterial({ color: 0x9ca3af });
+        const tower = new THREE.Mesh(towerGeometry, towerMaterial);
+        tower.position.y = -0.5;
+        
+        // Nacelle
+        const nacelleGeometry = new THREE.BoxGeometry(0.3, 0.2, 0.8);
+        const nacelleMaterial = new THREE.MeshPhongMaterial({ color: 0xf3f4f6 });
+        const nacelle = new THREE.Mesh(nacelleGeometry, nacelleMaterial);
+        nacelle.position.y = 1;
+        
+        // Blades
+        this.bladesGroup = new THREE.Group();
+        for (let i = 0; i < 3; i++) {
+            const bladeGeometry = new THREE.BoxGeometry(0.05, 1.5, 0.02);
+            const bladeMaterial = new THREE.MeshPhongMaterial({ color: 0xe5e7eb });
+            const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+            blade.position.y = 0.75;
+            blade.rotation.z = (i * Math.PI * 2) / 3;
+            this.bladesGroup.add(blade);
+        }
+        this.bladesGroup.position.set(0, 1, 0.4);
+        
+        this.group.add(tower, nacelle, this.bladesGroup);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(3, 2, 4);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.bladesGroup.rotation.z += 0.1;
+        this.group.rotation.y += 0.002;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class Factory {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Main building
+        const buildingGeometry = new THREE.BoxGeometry(2, 1.5, 1.5);
+        const buildingMaterial = new THREE.MeshPhongMaterial({ color: 0x64748b });
+        const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+        building.position.y = 0.25;
+        
+        // Smokestacks (converted to green emission for hydrogen)
+        for (let i = 0; i < 3; i++) {
+            const stackGeometry = new THREE.CylinderGeometry(0.1, 0.12, 1.5, 8);
+            const stackMaterial = new THREE.MeshPhongMaterial({ color: 0x374151 });
+            const stack = new THREE.Mesh(stackGeometry, stackMaterial);
+            stack.position.set(-0.6 + i * 0.6, 1.5, 0);
+            
+            // Green emission particles
+            const emissionGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const emissionMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x10b981,
+                transparent: true,
+                opacity: 0.7
+            });
+            const emission = new THREE.Mesh(emissionGeometry, emissionMaterial);
+            emission.position.set(-0.6 + i * 0.6, 2.3, 0);
+            
+            this.group.add(stack, emission);
+        }
+        
+        this.group.add(building);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(3, 2, 4);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.y += 0.003;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+// Enhanced scroll animations
+function animateOnScrollLight() {
+    const cards = document.querySelectorAll('.card-3d-light');
+    const processSteps = document.querySelectorAll('.process-step-light');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                }, index * 150);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    [...cards, ...processSteps].forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(50px) scale(0.95)';
+        el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        observer.observe(el);
+    });
+}
+
+// Enhanced mouse parallax effect
+function initLightParallax() {
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.card-3d-light');
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        
+        cards.forEach((card, index) => {
+            const intensity = (index + 1) * 0.3;
+            const rotateX = (y - 50) * intensity * 0.05;
+            const rotateY = (x - 50) * intensity * 0.05;
+            
+            card.style.transform += ` perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+    });
+}
+
+// Initialize all features
+document.addEventListener('DOMContentLoaded', () => {
+    initLightParticles();
+    animateOnScrollLight();
+    initLightParallax();
+    
+    // Initialize 3D models
+    setTimeout(() => {
+        if (typeof THREE !== 'undefined') {
+            new HydrogenMolecule('hydrogenCanvas');
+            new SolarPanel('solarCanvas');
+            new WindTurbine('windCanvas');
+            new Factory('factoryCanvas');
+        }
+    }, 500);
+    
+    // Periodic particle refresh
+    setInterval(() => {
+        const container = document.getElementById('particleContainerLight');
+        if (container && container.children.length < 30) {
+            container.appendChild(createLightParticle());
+        }
+    }, 2000);
+});
+
+// Enhanced button interactions
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-3d-light').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple-light');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+});
+</script>
+
+<style>
+.ripple-light {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: rippleEffectLight 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleEffectLight {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-3d-light:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+    
+    .model-container {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .model-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+</style>
+
 {% endblock %}

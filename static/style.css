@@ -1,65 +1,292 @@
-/* Custom styles for SmartHydroPay */
+/* Light Theme Custom Styles for SmartHydroPay */
 
-/* Progress bar animations */
+/* Progress bar animations with light theme */
 .progress-bar {
-    transition: width 0.3s ease-in-out;
+    transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    border-radius: 10px;
 }
 
-/* Hover effects */
+/* Enhanced hover effects for light theme */
 .hover-lift:hover {
-    transform: translateY(-2px);
-    transition: transform 0.2s ease;
+    transform: translateY(-4px) scale(1.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
 }
 
-/* Status badges */
+/* Light status badges */
 .status-pending {
-    background-color: #fef3c7;
-    color: #d97706;
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+    border: 1px solid #f59e0b;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.2);
 }
 
 .status-verified {
-    background-color: #dbeafe;
-    color: #2563eb;
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+    border: 1px solid #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2);
 }
 
 .status-approved {
-    background-color: #dcfce7;
-    color: #16a34a;
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+    border: 1px solid #16a34a;
+    box-shadow: 0 2px 8px rgba(22, 163, 74, 0.2);
 }
 
 .status-released {
-    background-color: #f3e8ff;
-    color: #9333ea;
+    background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+    color: #7c2d12;
+    border: 1px solid #9333ea;
+    box-shadow: 0 2px 8px rgba(147, 51, 234, 0.2);
 }
 
 .status-rejected {
-    background-color: #fee2e2;
-    color: #dc2626;
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    border: 1px solid #dc2626;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.2);
 }
 
-/* Card shadows */
+/* Enhanced light-themed card shadows */
 .card-shadow {
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.8));
+    backdrop-filter: blur(20px);
+    box-shadow: 
+        0 8px 24px rgba(0, 0, 0, 0.04),
+        0 2px 8px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(203, 213, 225, 0.3);
+    border-radius: 16px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .card-shadow:hover {
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,250,252,0.9));
+    box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.08),
+        0 8px 16px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    transform: translateY(-8px) rotateX(2deg) rotateY(2deg) scale(1.02);
+    border-color: rgba(59, 130, 246, 0.2);
 }
 
-/* Custom scrollbar */
+/* Enhanced light scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-    width: 6px;
+    width: 10px;
+    height: 10px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.8), 
+        rgba(241, 245, 249, 0.8));
+    border-radius: 12px;
+    border: 1px solid rgba(203, 213, 225, 0.2);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
-    background: #c1c1c1;
-    border-radius: 3px;
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    border-radius: 12px;
+    border: 2px solid rgba(248, 250, 252, 0.8);
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-    background: #a1a1a1;
+    background: linear-gradient(135deg, #059669, #2563eb);
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Light theme global enhancements */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', 'Segoe UI', 'Segoe UI Variable', system-ui, sans-serif;
+    perspective: 1200px;
+    background: linear-gradient(135deg, 
+        #f8fafc 0%, 
+        #e1f5fe 25%, 
+        #e8f5e8 50%, 
+        #f3e5f5 75%, 
+        #fff3e0 100%);
+    background-attachment: fixed;
+}
+
+/* Enhanced light transitions */
+a, button, .btn, input, select, textarea {
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Light-themed button enhancements */
+.btn {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.9), 
+        rgba(248, 250, 252, 0.8));
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(203, 213, 225, 0.3);
+    border-radius: 12px;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    color: #1e293b;
+    font-weight: 500;
+}
+
+.btn:hover {
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95), 
+        rgba(248, 250, 252, 0.9));
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 
+        0 8px 20px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+/* Light form enhancements */
+.form-control {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(203, 213, 225, 0.4);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+}
+
+.form-control:focus {
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.02);
+    box-shadow: 
+        0 0 0 3px rgba(59, 130, 246, 0.1),
+        0 4px 12px rgba(0, 0, 0, 0.06);
+    border-color: #3b82f6;
+}
+
+/* Light navigation enhancements */
+nav {
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(203, 213, 225, 0.2);
+}
+
+nav a {
+    position: relative;
+    overflow: hidden;
+}
+
+nav a:hover {
+    transform: translateY(-1px);
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(135deg, #10b981, #3b82f6);
+    transition: width 0.3s ease;
+}
+
+nav a:hover::before {
+    width: 100%;
+}
+
+/* Light footer styling */
+footer {
+    background: linear-gradient(135deg, 
+        rgba(248, 250, 252, 0.95), 
+        rgba(241, 245, 249, 0.95));
+    backdrop-filter: blur(20px);
+    border-top: 1px solid rgba(203, 213, 225, 0.3);
+    position: relative;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(59, 130, 246, 0.3), 
+        rgba(16, 185, 129, 0.3), 
+        transparent);
+}
+
+/* Enhanced animations */
+@keyframes lightGlow {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+}
+
+.glow-animation {
+    animation: lightGlow 3s ease-in-out infinite;
+}
+
+/* Responsive light theme */
+@media (max-width: 768px) {
+    .card-shadow:hover {
+        transform: translateY(-6px) scale(1.02);
+    }
+    
+    body {
+        background: linear-gradient(135deg, 
+            #f8fafc 0%, 
+            #e1f5fe 50%, 
+            #e8f5e8 100%);
+    }
+}
+
+/* Glass morphism utilities */
+.glass-light {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(203, 213, 225, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+
+.glass-light-hover:hover {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: rgba(59, 130, 246, 0.3);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+}
+
+/* Light gradient text */
+.gradient-text-light {
+    background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 600;
+}
+
+/* Subtle pulse for light theme */
+@keyframes lightPulse {
+    0%, 100% { 
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% { 
+        opacity: 0.9;
+        transform: scale(1.02);
+    }
+}
+
+.pulse-light {
+    animation: lightPulse 3s ease-in-out infinite;
 }
