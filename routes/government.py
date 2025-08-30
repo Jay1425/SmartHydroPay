@@ -1,9 +1,23 @@
 from flask import Blueprint, render_template, redirect, url_for, flash, abort
+government = Blueprint('government', __name__)
 from flask_login import login_required, current_user
 from app import db
 from app.models import Application, Audit
+from app.forms import GovernmentReviewForm
 
 government = Blueprint('government', __name__)
+
+@government.route('/review/<int:application_id>', methods=['GET', 'POST'])
+def review_application(application_id):
+    application = Application.query.get_or_404(application_id)
+    form = GovernmentReviewForm()
+    if form.validate_on_submit():
+        application.status = 'govt_approved' if form.approved.data else 'rejected'
+        application.govt_comments = form.comments.data
+        db.session.commit()
+        flash('Review submitted successfully!', 'success')
+        return redirect(url_for('government.applications'))
+    return render_template('govt_review.html', application=application, form=form)
 
 @government.before_request
 @login_required

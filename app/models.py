@@ -40,6 +40,7 @@ class Application(db.Model):
     documents = db.Column(db.Text)  # JSON string or file paths
     status = db.Column(db.String(50), default='pending')  # pending, auditor_verified, govt_approved, fund_released
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    govt_comments = db.Column(db.Text)  # Government review comments
     
     # Relationships
     audits = db.relationship('Audit', backref='application', lazy=True)

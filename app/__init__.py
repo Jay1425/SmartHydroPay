@@ -8,6 +8,13 @@ login_manager = LoginManager()
 
 def create_app():
     app = Flask(__name__, template_folder='../templates', static_folder='../static')
+    # Add Jinja2 filter for currency formatting
+    @app.template_filter('format_currency')
+    def format_currency(value):
+        try:
+            return "₹{:,.2f}".format(float(value))
+        except Exception:
+            return value
     
     # Configuration
     app.config['SECRET_KEY'] = 'your-secret-key-change-in-production'

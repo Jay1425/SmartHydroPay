@@ -36,9 +36,14 @@ class ApplicationForm(FlaskForm):
     project_details = TextAreaField('Project Details', validators=[Optional()])
     document_files = FileField('Upload Documents', render_kw={"multiple": True})
 
+
 class AuditForm(FlaskForm):
     comments = TextAreaField('Audit Comments', validators=[DataRequired()])
     verified = BooleanField('Verified')
+
+class GovernmentReviewForm(FlaskForm):
+    comments = TextAreaField('Government Review Comments', validators=[DataRequired()])
+    approved = BooleanField('Approved')
 
 class TransactionForm(FlaskForm):
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
