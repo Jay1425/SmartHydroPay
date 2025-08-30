@@ -1,0 +1,403 @@
+{% extends "base.html" %}
+
+{% block title %}My Applications{% endblock %}
+
+{% block content %}
+<div class="px-4 sm:px-6 lg:px-8 py-6">
+    <!-- Header Section -->
+    <div class="mb-6 sm:mb-8">
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+                <h1 class="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
+                    <i class="fas fa-file-alt mr-2"></i>My Applications
+                </h1>
+                <p class="text-sm sm:text-base text-slate-600">Track your subsidy application status and progress</p>
+            </div>
+            <div class="text-right">
+                <div class="text-2xl sm:text-3xl font-bold text-green-600">{{ applications|length }}</div>
+                <div class="text-xs sm:text-sm text-slate-500">Total Applications</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics Dashboard -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="bg-gradient-to-r from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-xl font-bold text-blue-700">{{ applications|selectattr('status', 'equalto', 'pending')|list|length }}</div>
+                    <div class="text-xs text-blue-600">Pending Review</div>
+                </div>
+                <i class="fas fa-clock text-blue-500 text-xl"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-xl border border-yellow-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-xl font-bold text-yellow-700">{{ applications|selectattr('status', 'equalto', 'auditor_verified')|list|length }}</div>
+                    <div class="text-xs text-yellow-600">Under Review</div>
+                </div>
+                <i class="fas fa-search text-yellow-500 text-xl"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-xl border border-green-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-xl font-bold text-green-700">{{ applications|selectattr('status', 'equalto', 'govt_approved')|list|length }}</div>
+                    <div class="text-xs text-green-600">Approved</div>
+                </div>
+                <i class="fas fa-check-circle text-green-500 text-xl"></i>
+            </div>
+        </div>
+        
+        <div class="bg-gradient-to-r from-purple-50 to-purple-100 p-4 rounded-xl border border-purple-200">
+            <div class="flex items-center justify-between">
+                <div>
+                    <div class="text-xl font-bold text-purple-700">{{ applications|selectattr('status', 'equalto', 'fund_released')|list|length }}</div>
+                    <div class="text-xs text-purple-600">Funded</div>
+                </div>
+                <i class="fas fa-money-bill-wave text-purple-500 text-xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white/90 backdrop-blur-sm border border-slate-200/50 p-4 sm:p-6 rounded-xl sm:rounded-2xl shadow-lg mb-6">
+        <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+            <div>
+                <h3 class="text-base sm:text-lg font-semibold text-slate-800">Quick Actions</h3>
+                <p class="text-xs sm:text-sm text-slate-600 mt-1">Submit a new application or manage existing ones</p>
+            </div>
+            <div class="flex flex-col sm:flex-row gap-3">
+                <a href="{{ url_for('producer.apply') }}" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl hover:from-green-600 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg text-center font-semibold text-sm sm:text-base">
+                    <i class="fas fa-plus mr-2"></i>New Application
+                </a>
+                <button onclick="toggleMapView()" class="bg-slate-600 hover:bg-slate-700 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg text-center font-semibold text-sm sm:text-base">
+                    <i class="fas fa-map mr-2"></i>Map View
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Map View (Hidden by default) -->
+    <div id="map-container" class="hidden bg-white/90 backdrop-blur-sm border border-slate-200/50 rounded-xl sm:rounded-2xl shadow-lg mb-6 p-4">
+        <h3 class="text-lg font-semibold text-slate-800 mb-4">
+            <i class="fas fa-map-marked-alt mr-2"></i>Application Locations
+        </h3>
+        <div id="applications-map" class="w-full h-96 rounded-lg border border-slate-200"></div>
+    </div>
+
+    <!-- Applications List -->
+    <div class="bg-white/90 backdrop-blur-sm border border-slate-200/50 rounded-xl sm:rounded-2xl shadow-lg overflow-hidden">
+        <div class="p-4 sm:p-6 border-b border-slate-200">
+            <h3 class="text-base sm:text-lg font-semibold text-slate-800">
+                <i class="fas fa-list mr-2"></i>Application History ({{ applications|length }} applications)
+            </h3>
+        </div>
+        
+        {% if applications %}
+            <!-- Applications Cards for Mobile/Tablet -->
+            <div class="lg:hidden">
+                {% for app in applications %}
+                <div class="application-card border-b border-slate-200 p-4 hover:bg-slate-50 transition-colors duration-200 cursor-pointer" onclick="toggleApplicationDetails({{ loop.index }})">
+                    <div class="flex items-start justify-between">
+                        <div class="flex-1">
+                            <div class="flex items-center gap-3 mb-2">
+                                <div class="application-number bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                    {{ loop.index }}
+                                </div>
+                                <h4 class="font-semibold text-slate-800 text-sm">{{ app.project_name }}</h4>
+                            </div>
+                            <div class="space-y-1 text-xs text-slate-600">
+                                <div><i class="fas fa-bolt w-4"></i> {{ app.capacity_mw or app.capacity }} MW</div>
+                                <div><i class="fas fa-map-marker-alt w-4"></i> {{ app.project_location }}</div>
+                                <div><i class="fas fa-calendar w-4"></i> {{ app.created_at.strftime('%d %b %Y') }}</div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <span class="status-badge-{{ app.status }} inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                                {{ app.status|replace('_', ' ')|title }}
+                            </span>
+                            <div class="mt-2">
+                                <i class="fas fa-chevron-down text-slate-400 transition-transform duration-200" id="arrow-{{ loop.index }}"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Expandable Details -->
+                    <div id="details-{{ loop.index }}" class="hidden mt-4 pt-4 border-t border-slate-200">
+                        <div class="grid grid-cols-2 gap-4 text-xs">
+                            <div>
+                                <strong>Technology:</strong><br>
+                                {{ app.technology_type|replace('_', ' ')|title if app.technology_type else 'Not specified' }}
+                            </div>
+                            <div>
+                                <strong>Capacity:</strong><br>
+                                {{ app.capacity_tons }} tons/year
+                            </div>
+                            <div>
+                                <strong>CAPEX:</strong><br>
+                                ₹{{ app.capex_estimate }} Crores
+                            </div>
+                            <div>
+                                <strong>Status:</strong><br>
+                                {{ app.status|replace('_', ' ')|title }}
+                            </div>
+                        </div>
+                        
+                        {% if app.project_latitude and app.project_longitude %}
+                        <div class="mt-4">
+                            <button onclick="showLocationOnMap({{ app.project_latitude }}, {{ app.project_longitude }}, '{{ app.project_name }}')" class="bg-blue-100 hover:bg-blue-200 text-blue-700 px-3 py-1 rounded-lg text-xs transition-colors">
+                                <i class="fas fa-map-marker-alt mr-1"></i>View on Map
+                            </button>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-4 flex gap-2">
+                            <button class="bg-green-100 hover:bg-green-200 text-green-700 px-3 py-1 rounded-lg text-xs transition-colors">
+                                <i class="fas fa-eye mr-1"></i>View Details
+                            </button>
+                            {% if app.status == 'pending' %}
+                            <button class="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-3 py-1 rounded-lg text-xs transition-colors">
+                                <i class="fas fa-edit mr-1"></i>Edit
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Desktop Table View -->
+            <div class="hidden lg:block overflow-x-auto">
+                <table class="w-full">
+                    <thead>
+                        <tr class="bg-slate-50 border-b border-slate-200">
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">#</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Project Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Technology</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Capacity</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Location</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Submitted</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-slate-600 uppercase tracking-wider">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        {% for app in applications %}
+                        <tr class="hover:bg-slate-50 transition-colors duration-200">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="application-number bg-gradient-to-r from-green-500 to-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold">
+                                    {{ loop.index }}
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm font-medium text-slate-800">{{ app.project_name }}</div>
+                                <div class="text-sm text-slate-500">{{ app.project_title }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-slate-800">{{ app.technology_type|replace('_', ' ')|title if app.technology_type else 'Not specified' }}</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-slate-800">{{ app.capacity_mw or app.capacity }} MW</div>
+                                <div class="text-xs text-slate-500">{{ app.capacity_tons }} tons/year</div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="text-sm text-slate-800">{{ app.project_location }}</div>
+                                {% if app.project_latitude and app.project_longitude %}
+                                <button onclick="showLocationOnMap({{ app.project_latitude }}, {{ app.project_longitude }}, '{{ app.project_name }}')" class="text-xs text-blue-600 hover:text-blue-800">
+                                    <i class="fas fa-map-marker-alt mr-1"></i>View on Map
+                                </button>
+                                {% endif %}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="status-badge-{{ app.status }} inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium">
+                                    {{ app.status|replace('_', ' ')|title }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
+                                {{ app.created_at.strftime('%d %b %Y') }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                <div class="flex space-x-2">
+                                    <button class="text-blue-600 hover:text-blue-900 transition-colors">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    {% if app.status == 'pending' %}
+                                    <button class="text-green-600 hover:text-green-900 transition-colors">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <!-- Empty State -->
+            <div class="text-center py-12">
+                <div class="mb-4">
+                    <i class="fas fa-file-plus text-6xl text-slate-300"></i>
+                </div>
+                <h3 class="text-lg font-medium text-slate-900 mb-2">No applications yet</h3>
+                <p class="text-slate-500 mb-6">Start by submitting your first green hydrogen subsidy application.</p>
+                <a href="{{ url_for('producer.apply') }}" class="bg-gradient-to-r from-green-500 to-blue-500 text-white px-6 py-3 rounded-xl hover:from-green-600 hover:to-blue-600 transition-all duration-200 transform hover:scale-105 shadow-lg font-semibold">
+                    <i class="fas fa-plus mr-2"></i>Submit Your First Application
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Google Maps API for location display -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBo-1234567890&callback=initApplicationsMap"></script>
+
+<style>
+/* Status Badge Styles */
+.status-badge-pending { @apply bg-yellow-100 text-yellow-800; }
+.status-badge-auditor_verified { @apply bg-blue-100 text-blue-800; }
+.status-badge-govt_approved { @apply bg-green-100 text-green-800; }
+.status-badge-fund_released { @apply bg-purple-100 text-purple-800; }
+.status-badge-rejected { @apply bg-red-100 text-red-800; }
+.status-badge-requires_revision { @apply bg-orange-100 text-orange-800; }
+
+/* Animation for application numbers */
+.application-number {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+</style>
+
+<script>
+let applicationsMap;
+
+function initApplicationsMap() {
+    // Initialize map for viewing application locations
+    const mapCenter = { lat: 28.6139, lng: 77.2090 }; // Default to Delhi
+    
+    applicationsMap = new google.maps.Map(document.getElementById('applications-map'), {
+        zoom: 6,
+        center: mapCenter,
+        styles: [
+            {
+                featureType: 'all',
+                elementType: 'geometry.fill',
+                stylers: [{ color: '#f0f8ff' }]
+            }
+        ]
+    });
+    
+    // Add markers for all applications with coordinates
+    const applications = [
+        {% for app in applications %}
+        {% if app.project_latitude and app.project_longitude %}
+        {
+            lat: {{ app.project_latitude }},
+            lng: {{ app.project_longitude }},
+            title: "{{ app.project_name }}",
+            status: "{{ app.status }}",
+            capacity: "{{ app.capacity_mw or app.capacity }} MW"
+        },
+        {% endif %}
+        {% endfor %}
+    ];
+    
+    applications.forEach((app, index) => {
+        const marker = new google.maps.Marker({
+            position: { lat: app.lat, lng: app.lng },
+            map: applicationsMap,
+            title: app.title,
+            icon: {
+                url: getMarkerIcon(app.status),
+                scaledSize: new google.maps.Size(30, 30)
+            }
+        });
+        
+        const infoWindow = new google.maps.InfoWindow({
+            content: `
+                <div class="p-2">
+                    <h4 class="font-semibold">${app.title}</h4>
+                    <p class="text-sm">Capacity: ${app.capacity}</p>
+                    <p class="text-sm">Status: ${app.status.replace('_', ' ')}</p>
+                </div>
+            `
+        });
+        
+        marker.addListener('click', () => {
+            infoWindow.open(applicationsMap, marker);
+        });
+    });
+}
+
+function getMarkerIcon(status) {
+    const colors = {
+        'pending': 'yellow',
+        'auditor_verified': 'blue',
+        'govt_approved': 'green',
+        'fund_released': 'purple',
+        'rejected': 'red'
+    };
+    return `https://maps.google.com/mapfiles/ms/icons/${colors[status] || 'red'}-dot.png`;
+}
+
+function toggleMapView() {
+    const mapContainer = document.getElementById('map-container');
+    if (mapContainer.classList.contains('hidden')) {
+        mapContainer.classList.remove('hidden');
+        // Trigger map resize after showing
+        setTimeout(() => {
+            google.maps.event.trigger(applicationsMap, 'resize');
+        }, 100);
+    } else {
+        mapContainer.classList.add('hidden');
+    }
+}
+
+function showLocationOnMap(lat, lng, title) {
+    toggleMapView();
+    setTimeout(() => {
+        const location = { lat: lat, lng: lng };
+        applicationsMap.setCenter(location);
+        applicationsMap.setZoom(15);
+        
+        // Show info window
+        const infoWindow = new google.maps.InfoWindow({
+            content: `<div class="p-2"><h4 class="font-semibold">${title}</h4></div>`,
+            position: location
+        });
+        infoWindow.open(applicationsMap);
+    }, 200);
+}
+
+function toggleApplicationDetails(index) {
+    const details = document.getElementById(`details-${index}`);
+    const arrow = document.getElementById(`arrow-${index}`);
+    
+    if (details.classList.contains('hidden')) {
+        details.classList.remove('hidden');
+        arrow.style.transform = 'rotate(180deg)';
+    } else {
+        details.classList.add('hidden');
+        arrow.style.transform = 'rotate(0deg)';
+    }
+}
+
+// Animate application numbers on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const numbers = document.querySelectorAll('.application-number');
+    numbers.forEach((num, index) => {
+        setTimeout(() => {
+            num.style.animation = 'pulse 2s infinite';
+        }, index * 100);
+    });
+});
+</script>
+{% endblock %}
