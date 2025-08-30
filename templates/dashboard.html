@@ -108,8 +108,8 @@
 </div>
 
 {% if current_user.role == 'producer' %}
-    <div class="dashboard-cards">
-        <div class="card-3d-light group text-center p-8">
+    <div class="dashboard-cards flex flex-col md:flex-row gap-6 mb-8">
+        <div class="card-3d-light group text-center p-8 flex-1">
             <div class="icon-3d-light text-5xl text-green-500 mb-4 group-hover:text-green-600">
                 <i class="fas fa-plus"></i>
             </div>
@@ -118,7 +118,7 @@
                 <i class="fas fa-paper-plane mr-2"></i>Submit New Application
             </a>
         </div>
-        <div class="card-3d-light group text-center p-8">
+        <div class="card-3d-light group text-center p-8 flex-1">
             <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
                 <i class="fas fa-chart-bar"></i>
             </div>
@@ -144,21 +144,23 @@
             <i class="fas fa-file-alt mr-2"></i>Your Applications
         </h3>
         {% if applications %}
-            <table class="w-full table-auto">
-                <thead>
+            <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg shadow-md">
+                <thead class="bg-blue-50">
                     <tr>
-                        <th>Project Name</th>
-                        <th>Capacity (MW)</th>
-                        <th>Status</th>
-                        <th>Submitted</th>
+                        <th class="px-4 py-2 text-left">Project Name</th>
+                        <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                        <th class="px-4 py-2 text-left">Status</th>
+                        <th class="px-4 py-2 text-left">Submitted</th>
+                        <th class="px-4 py-2 text-left">Details</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for app in applications %}
-                    <tr>
-                        <td>{{ app.project_name }}</td>
-                        <td>{{ app.capacity }}</td>
-                        <td>
+                    <tr class="border-t hover:bg-blue-50">
+                        <td class="px-4 py-2 font-semibold">{{ app.project_name }}</td>
+                        <td class="px-4 py-2">{{ app.capacity }}</td>
+                        <td class="px-4 py-2">
                             <span class="status-badge
                                 {% if app.status == 'pending' %}status-pending
                                 {% elif app.status == 'auditor_verified' %}status-verified
@@ -168,11 +170,13 @@
                                 {{ app.status.replace('_', ' ').title() }}
                             </span>
                         </td>
-                        <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ app.project_details }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
+            </div>
         {% else %}
             <p class="text-gray-500 text-center py-8">No applications submitted yet. <a href="{{ url_for('producer.apply') }}" class="text-blue-600">Submit your first application</a></p>
         {% endif %}
