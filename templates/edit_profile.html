@@ -369,6 +369,39 @@
         border-color: rgba(16, 185, 129, 0.6);
     }
 
+    /* Profile initial avatar for edit page */
+    .profile-initial-avatar-edit {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: white;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        border: 3px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        animation: profileEditInitialPulse 3s ease-in-out infinite;
+    }
+
+    .profile-initial-avatar-edit:hover {
+        transform: scale(1.05);
+        border-color: rgba(16, 185, 129, 0.6);
+    }
+
+    @keyframes profileEditInitialPulse {
+        0%, 100% { 
+            background: linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6);
+        }
+        50% { 
+            background: linear-gradient(135deg, #059669, #2563eb, #7c3aed);
+        }
+    }
+
     .photo-upload-controls {
         flex: 1;
         text-align: center;
@@ -513,8 +546,9 @@
                                 <img src="{{ url_for('static', filename='uploads/profile_photos/' + current_user.profile_photo) }}" 
                                      alt="Current Photo" class="current-photo">
                             {% else %}
-                                <img src="{{ url_for('static', filename='uploads/profile_photos/default_avatar.svg') }}" 
-                                     alt="Default Avatar" class="current-photo">
+                                <div class="current-photo profile-initial-avatar-edit">
+                                    {{ current_user.name[0].upper() }}
+                                </div>
                             {% endif %}
                         </div>
                         <div class="photo-upload-controls">

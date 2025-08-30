@@ -109,7 +109,9 @@
                                     <img src="{{ url_for('static', filename='uploads/profile_photos/' + current_user.profile_photo) }}" 
                                          alt="{{ current_user.name }}" class="w-6 h-6 rounded-full mr-2 object-cover border border-slate-300">
                                 {% else %}
-                                    <i class="fas fa-user mr-2 text-slate-500"></i>
+                                    <div class="w-6 h-6 rounded-full mr-2 bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center text-white text-xs font-semibold">
+                                        {{ current_user.name[0].upper() }}
+                                    </div>
                                 {% endif %}
                                 {{ current_user.name }} 
                                 <span class="text-xs bg-gradient-to-r from-green-500 to-blue-500 text-white px-2 py-1 rounded-full ml-2">{{ current_user.role.title() }}</span>
