@@ -14,6 +14,9 @@ class User(UserMixin, db.Model):
     organization = db.Column(db.String(200), nullable=True)
     bio = db.Column(db.Text, nullable=True)
     profile_photo = db.Column(db.String(200), nullable=True, default='default_avatar.svg')
+    is_verified = db.Column(db.Boolean, default=False)  # Email verification status
+    otp_code = db.Column(db.String(6), nullable=True)  # Temporary OTP storage
+    otp_expires = db.Column(db.DateTime, nullable=True)  # OTP expiration time
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     

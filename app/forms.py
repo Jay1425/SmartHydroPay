@@ -8,6 +8,9 @@ class LoginForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
     password = PasswordField('Password', validators=[DataRequired()])
 
+class OTPVerificationForm(FlaskForm):
+    otp_code = StringField('Enter 6-digit OTP', validators=[DataRequired(), Length(min=6, max=6)])
+
 class SignupForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired(), Length(min=2, max=100)])
     email = StringField('Email', validators=[DataRequired(), Email()])
