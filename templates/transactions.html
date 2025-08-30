@@ -49,15 +49,11 @@
                 <tbody>
                     {% for txn in transactions %}
                     <tr class="border-b">
-                        <td class="py-2 px-4">{{ txn.created_at.strftime('%Y-%m-%d') }}</td>
-                        <td class="py-2 px-4">{{ txn.producer.name }}</td>
+                        <td class="py-2 px-4">{{ txn.date.strftime('%Y-%m-%d') }}</td>
+                        <td class="py-2 px-4">{{ txn.application.producer.name }}</td>
                         <td class="py-2 px-4">₹{{ '{:,.2f}'.format(txn.amount) }}</td>
                         <td class="py-2 px-4">
-                            {% if txn.status == 'Completed' %}
-                                <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">Completed</span>
-                            {% else %}
-                                <span class="bg-yellow-200 text-yellow-800 px-2 py-1 rounded-full text-xs">Pending</span>
-                            {% endif %}
+                            <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-xs">Completed</span>
                         </td>
                     </tr>
                     {% else %}

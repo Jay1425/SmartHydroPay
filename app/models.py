@@ -68,6 +68,7 @@ class Transaction(db.Model):
     bank_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
     amount = db.Column(db.Float, nullable=False)
+    comments = db.Column(db.Text, nullable=True)
     date = db.Column(db.DateTime, default=datetime.utcnow)
     
     def __repr__(self):

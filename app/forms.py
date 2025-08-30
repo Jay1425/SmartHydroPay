@@ -50,3 +50,4 @@ class GovernmentReviewForm(FlaskForm):
 
 class TransactionForm(FlaskForm):
     amount = FloatField('Amount', validators=[DataRequired(), NumberRange(min=0)])
+    comments = TextAreaField('Transaction Comments', validators=[Optional(), Length(max=500)])

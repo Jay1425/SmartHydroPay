@@ -33,7 +33,8 @@ def release(application_id):
         transaction = Transaction(
             bank_id=current_user.id,
             application_id=application_id,
-            amount=form.amount.data
+            amount=form.amount.data,
+            comments=form.comments.data
         )
         
         # Update application status
@@ -45,7 +46,15 @@ def release(application_id):
         flash(f'Funds of ${form.amount.data:,.2f} released for "{application.project_name}"!', 'success')
         return redirect(url_for('bank.transactions'))
     
-    return render_template('release_funds.html', form=form, application=application)
+    # Calculate recommended amount
+    print(f"Application capacity: {application.capacity} (type: {type(application.capacity)})")
+    recommended_amount = float(application.capacity) * 100000
+    print(f"Recommended amount: {recommended_amount}")
+    
+    return render_template('release_funds.html', 
+                         form=form, 
+                         application=application, 
+                         recommended_amount=recommended_amount)
 
 @bank.route('/pending')
 def pending_releases():
