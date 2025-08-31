@@ -1,0 +1,577 @@
+{% extends "base.html" %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<style>
+    /* Reset and base styles */
+    * {
+        box-sizing: border-box;
+    }
+    
+    .font-inter { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+    }
+    
+    /* Login Page Optimized Animation Styles */
+    .login-hero-section {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e1f5fe 25%, #e8f5e8 50%, #f3e5f5 75%, #fff3e0 100%);
+        background-attachment: fixed;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .login-floating-3d-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .login-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    /* Optimized floating animation */
+    .login-floating-element {
+        animation: loginGentleFloat 6s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    @keyframes loginGentleFloat {
+        0%, 100% { 
+            transform: translateY(0px) scale(1); 
+        }
+        50% { 
+            transform: translateY(-10px) scale(1.01); 
+        }
+    }
+
+    /* Optimized login card */
+    .login-card-3d-light {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.1),
+            0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        transition: all 0.3s ease-out;
+        animation: loginCardEntrance 0.8s ease-out;
+        will-change: transform;
+    }
+
+    @keyframes loginCardEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .login-card-3d-light:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.15),
+            0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Simplified icon animation */
+    .login-icon-3d-light {
+        display: inline-block;
+        transition: all 0.4s ease;
+        animation: loginIconPulse 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes loginIconPulse {
+        0%, 100% { 
+            transform: scale(1);
+            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+        }
+        50% { 
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.4));
+        }
+    }
+
+    .login-icon-3d-light:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Simplified text animation */
+    .login-text-glow-light {
+        background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: loginTextShimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes loginTextShimmer {
+        0%, 100% { 
+            background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        50% { 
+            background: linear-gradient(135deg, #0f766e, #1d4ed8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    /* Simplified form animations */
+    .login-form-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: loginFieldSlideIn 0.6s ease-out forwards;
+    }
+
+    .login-form-field:nth-child(1) { animation-delay: 0.1s; }
+    .login-form-field:nth-child(2) { animation-delay: 0.2s; }
+    .login-form-field:nth-child(3) { animation-delay: 0.3s; }
+
+    @keyframes loginFieldSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Optimized input styling */
+    .login-input-3d {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(200, 200, 200, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        width: 100%;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        color: #1e293b;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .login-input-3d:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 1);
+        border-color: #3b82f6;
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-input-3d::placeholder {
+        color: #94a3b8;
+    }
+
+    .login-label-3d {
+        display: block;
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Optimized button */
+    .login-btn-3d-light {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: loginButtonEntrance 0.6s ease-out 0.4s forwards;
+    }
+
+    @keyframes loginButtonEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .login-btn-3d-light:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        background: linear-gradient(135deg, #059669, #2563eb);
+    }
+
+    .login-btn-3d-light:active {
+        transform: translateY(0);
+    }
+
+    .login-link-3d {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .login-link-3d:hover {
+        color: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .login-link-3d::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #3b82f6;
+        transition: width 0.3s ease;
+    }
+
+    .login-link-3d:hover::after {
+        width: 100%;
+    }
+
+    /* Simplified particles */
+    .login-particle-light {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #10b981, #3b82f6);
+        animation: loginParticleFloat 15s infinite linear;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    @keyframes loginParticleFloat {
+        0% {
+            transform: translateY(100vh) scale(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        90% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(-100vh) scale(0);
+            opacity: 0;
+        }
+    }
+
+    /* Simplified wave */
+    .login-wave-light {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff' fill-opacity='0.4'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        animation: loginWave 12s linear infinite;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    @keyframes loginWave {
+        0% { background-position-x: 0; }
+        100% { background-position-x: 1200px; }
+    }
+
+    .login-error-message {
+        background: rgba(254, 226, 226, 0.9);
+        color: #dc2626;
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        animation: loginErrorShake 0.4s ease-in-out;
+    }
+
+    @keyframes loginErrorShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .login-signup-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        border: 1px solid rgba(200, 200, 200, 0.2);
+        opacity: 0;
+        animation: loginSignupSlideUp 0.6s ease-out 0.6s forwards;
+    }
+
+    @keyframes loginSignupSlideUp {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Simple gradient border animation */
+    .login-gradient-border {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        padding: 2px;
+        border-radius: 16px;
+        display: inline-block;
+        animation: loginBorderPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes loginBorderPulse {
+        0%, 100% { 
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+        }
+        50% { 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+    }
+
+    .login-gradient-border-inner {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 14px;
+        padding: 1.25rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .login-card-3d-light {
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .login-hero-section {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-card-3d-light {
+            padding: 1.5rem;
+            border-radius: 20px;
+        }
+        
+        .login-gradient-border-inner {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<!-- Login Hero Section with Optimized Background -->
+<div class="login-hero-section">
+    <div class="login-floating-3d-container">
+        <div id="loginParticleContainer"></div>
+        <div class="login-wave-light"></div>
+    </div>
+    
+    <div class="login-content">
+        <div class="login-floating-element">
+            <div class="login-card-3d-light">
+                <div class="text-center mb-8">
+                    <div class="login-gradient-border mb-6">
+                        <div class="login-gradient-border-inner">
+                            <div class="login-icon-3d-light text-5xl text-green-500">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold login-text-glow-light mb-3">Welcome Back</h2>
+                    <p class="text-lg text-slate-600 font-medium">Sign in to your SmartHydroPay account</p>
+                </div>
+
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="login-form-field">
+                        {{ form.email.label(class="login-label-3d") }}
+                        {{ form.email(class="login-input-3d", placeholder="Enter your email address") }}
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <div class="login-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="login-form-field">
+                        {{ form.password.label(class="login-label-3d") }}
+                        {{ form.password(class="login-input-3d", placeholder="Enter your password") }}
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <div class="login-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="login-form-field">
+                        <button type="submit" class="login-btn-3d-light">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Sign In to Dashboard
+                        </button>
+                    </div>
+                </form>
+
+                <div class="login-signup-link">
+                    <p class="text-slate-600 text-base">
+                        New to SmartHydroPay? 
+                        <a href="{{ url_for('auth.signup') }}" class="login-link-3d">Create your account here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Optimized Particle Animation System for Login
+function createLoginParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'login-particle-light';
+    const size = Math.random() * 4 + 2;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    return particle;
+}
+
+function initLoginParticles() {
+    const container = document.getElementById('loginParticleContainer');
+    if (!container) return;
+    
+    for (let i = 0; i < 15; i++) {
+        container.appendChild(createLoginParticle());
+    }
+}
+
+// Enhanced login form interactions
+function initLoginFormAnimations() {
+    const inputs = document.querySelectorAll('.login-input-3d');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.transform = 'translateY(-1px) scale(1.01)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+        
+        // Real-time validation feedback
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.borderColor = '#10b981';
+                this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)';
+            } else {
+                this.style.borderColor = 'rgba(200, 200, 200, 0.3)';
+                this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    });
+    
+    // Button click effect
+    const button = document.querySelector('.login-btn-3d-light');
+    if (button) {
+        button.addEventListener('click', function(e) {
+            this.style.transform = 'translateY(0) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateY(-2px) scale(1)';
+            }, 150);
+        });
+    }
+}
+
+// Simple parallax effect
+function initLoginParallax() {
+    document.addEventListener('mousemove', (e) => {
+        const card = document.querySelector('.login-card-3d-light');
+        if (!card) return;
+        
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        
+        card.style.transform = `translateY(-5px) rotateX(${y * 0.1}deg) rotateY(${x * 0.1}deg)`;
+    });
+    
+    document.addEventListener('mouseleave', () => {
+        const card = document.querySelector('.login-card-3d-light');
+        if (card) {
+            card.style.transform = 'translateY(-5px) rotateX(0deg) rotateY(0deg)';
+        }
+    });
+}
+
+// Initialize all login features
+document.addEventListener('DOMContentLoaded', () => {
+    // Add small delay to ensure DOM is ready
+    setTimeout(() => {
+        initLoginParticles();
+        initLoginFormAnimations();
+        initLoginParallax();
+    }, 100);
+    
+    // Refresh particles occasionally
+    setInterval(() => {
+        const container = document.getElementById('loginParticleContainer');
+        if (container && container.children.length < 15) {
+            container.appendChild(createLoginParticle());
+        }
+    }, 5000);
+});
+
+// Handle form submission animation
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('.login-btn-3d-light');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Signing In...';
+                button.disabled = true;
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,1138 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .font-inter { font-family: 'Inter', sans-serif; }
+    
+    /* Light 3D Animation Styles */
+    .hero-section {
+        position: relative;
+        min-height: 85vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e1f5fe 25%, #e8f5e8 50%, #f3e5f5 75%, #fff3e0 100%);
+        overflow: hidden;
+    }
+
+    .floating-3d-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 2;
+        color: #1e293b;
+        text-align: center;
+        padding: 100px 20px;
+    }
+
+    .floating-element {
+        animation: gentleFloat 8s ease-in-out infinite;
+    }
+
+    .floating-element:nth-child(2) { animation-delay: -2s; }
+    .floating-element:nth-child(3) { animation-delay: -4s; }
+
+    @keyframes gentleFloat {
+        0%, 100% { transform: translateY(0px) scale(1); }
+        50% { transform: translateY(-15px) scale(1.02); }
+    }
+
+    .card-3d-light {
+        background: linear-gradient(145deg, rgba(255,255,255,0.9), rgba(248,250,252,0.8));
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        transform-style: preserve-3d;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        border: 1px solid rgba(203, 213, 225, 0.3);
+        box-shadow: 
+            0 10px 30px rgba(0, 0, 0, 0.04),
+            0 1px 8px rgba(0, 0, 0, 0.02),
+            inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .card-3d-light:hover {
+        transform: scale(1.07);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.10),
+            0 10px 20px rgba(0, 0, 0, 0.06),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        border-color: rgba(59, 130, 246, 0.2);
+        z-index: 2;
+    }
+
+    .process-flow-light {
+        background: linear-gradient(135deg, 
+            rgba(255,255,255,0.95) 0%, 
+            rgba(240,253,244,0.95) 25%, 
+            rgba(239,246,255,0.95) 50%, 
+            rgba(253,244,255,0.95) 75%, 
+            rgba(255,251,235,0.95) 100%);
+        backdrop-filter: blur(20px);
+        border-radius: 32px;
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.04),
+            inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    }
+
+    .process-step-light {
+        background: rgba(255, 255, 255, 0.6);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        transition: all 0.3s ease;
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    }
+
+    .process-step-light:hover {
+        background: rgba(255, 255, 255, 0.8);
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+        border-color: rgba(34, 197, 94, 0.2);
+    }
+
+    .btn-3d-light {
+        background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+        border: none;
+        border-radius: 50px;
+        padding: 16px 32px;
+        color: white;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 
+            0 8px 20px rgba(16, 185, 129, 0.2),
+            0 2px 8px rgba(59, 130, 246, 0.15);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn-3d-light:hover {
+        transform: translateY(-3px) scale(1.02);
+        box-shadow: 
+            0 12px 30px rgba(16, 185, 129, 0.3),
+            0 4px 12px rgba(59, 130, 246, 0.2);
+    }
+
+    .btn-3d-light::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-3d-light:hover::before {
+        left: 100%;
+    }
+
+    .icon-3d-light {
+        transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        display: inline-block;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.06));
+    }
+
+    .icon-3d-light:hover {
+        transform: rotateY(360deg) scale(1.15);
+        filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.1));
+    }
+
+    .text-glow-light {
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .glass-effect-light {
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(203, 213, 225, 0.2);
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Enhanced particle animation */
+    .particle-light {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #10b981, #3b82f6, #8b5cf6, #f59e0b);
+        animation: particleFloatLight 20s infinite linear;
+        opacity: 0.6;
+    }
+
+    @keyframes particleFloatLight {
+        0% {
+            transform: translateY(100vh) rotate(0deg) scale(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        90% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(-100vh) rotate(360deg) scale(0);
+            opacity: 0;
+        }
+    }
+
+    .wave-light {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 80px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff' fill-opacity='0.8'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        animation: waveLight 15s linear infinite;
+        opacity: 0.6;
+    }
+
+    @keyframes waveLight {
+        0% { background-position-x: 0; }
+        100% { background-position-x: 1200px; }
+    }
+
+    /* 3D Model Container */
+    .model-container {
+        position: absolute;
+        width: 200px;
+        height: 200px;
+        border-radius: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .gradient-border {
+        background: linear-gradient(135deg, #10b981, #3b82f6, #8b5cf6);
+        padding: 2px;
+        border-radius: 16px;
+    }
+
+    .gradient-border-inner {
+        background: white;
+        border-radius: 14px;
+        padding: 6px;
+    }
+
+    /* Simple, reliable animations for new sections */
+    .fade-in-section {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s ease-out;
+    }
+
+    .fade-in-section.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .slide-in-left {
+        opacity: 0;
+        transform: translateX(-50px);
+        transition: all 0.6s ease-out;
+    }
+
+    .slide-in-left.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .slide-in-right {
+        opacity: 0;
+        transform: translateX(50px);
+        transition: all 0.6s ease-out;
+    }
+
+    .slide-in-right.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    .scale-in {
+        opacity: 0;
+        transform: scale(0.9);
+        transition: all 0.5s ease-out;
+    }
+
+    .scale-in.visible {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    .counter-animation {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: all 0.6s ease-out;
+    }
+
+    .counter-animation.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Enhanced card hover for new sections */
+    .info-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(15px);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+        transform: translateY(0);
+    }
+
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        border-color: rgba(59, 130, 246, 0.3);
+    }
+
+    /* Simple icon animation */
+    .simple-icon-hover {
+        transition: all 0.3s ease;
+    }
+
+    .simple-icon-hover:hover {
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+
+    /* Staggered animation delays */
+    .delay-100 { animation-delay: 0.1s; }
+    .delay-200 { animation-delay: 0.2s; }
+    .delay-300 { animation-delay: 0.3s; }
+    .delay-400 { animation-delay: 0.4s; }
+    .delay-500 { animation-delay: 0.5s; }
+    .delay-600 { animation-delay: 0.6s; }
+</style>
+
+<!-- Hero Section with Light 3D Background -->
+<div class="hero-section">
+    <div class="floating-3d-container">
+        <!-- 3D Canvas for Hydrogen Molecule -->
+        <canvas id="hydrogenCanvas" class="model-container" style="top: 10%; left: 10%;"></canvas>
+        <!-- 3D Canvas for Solar Panel -->
+        <canvas id="solarCanvas" class="model-container" style="top: 20%; right: 15%;"></canvas>
+        <!-- 3D Canvas for Wind Turbine -->
+        <canvas id="windCanvas" class="model-container" style="bottom: 30%; left: 5%;"></canvas>
+        <!-- 3D Canvas for Factory -->
+        <canvas id="factoryCanvas" class="model-container" style="bottom: 10%; right: 10%;"></canvas>
+    </div>
+    
+    <div id="particleContainerLight"></div>
+    <div class="wave-light"></div>
+    
+    <div class="hero-content">
+        <div class="floating-element mb-12">
+            <div class="gradient-border inline-block mb-8">
+                <div class="gradient-border-inner">
+                    <div class="icon-3d-light text-8xl text-green-500">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                </div>
+            </div>
+            <h1 class="text-7xl font-bold text-glow-light mb-6">Welcome to SmartHydroPay</h1>
+            <p class="text-2xl mb-8 glass-effect-light p-6 rounded-full inline-block text-slate-700 font-medium">
+                Smart Subsidy Management System for Green Hydrogen Projects
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Enhanced Light 3D Cards Section -->
+<!-- <div class="relative z-10 -mt-24">
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20 px-4">
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-blue-500 mb-6 group-hover:text-blue-600">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Government Bodies</h3>
+            <p class="text-slate-600 leading-relaxed">Approve subsidy applications and monitor funds distribution with transparency and efficiency</p>
+          
+        </div>
+        
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-green-500 mb-6 group-hover:text-green-600">
+                <i class="fas fa-industry"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Producers</h3>
+
+        </div>
+        
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-purple-500 mb-6 group-hover:text-purple-600">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Auditors</h3>
+            <p class="text-slate-600 leading-relaxed">Verify and audit producer applications with comprehensive review processes</p>
+           
+        </div>
+        
+        <div class="card-3d-light p-8 text-center group">
+            <div class="icon-3d-light text-6xl text-orange-500 mb-6 group-hover:text-orange-600">
+                <i class="fas fa-university"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-4 text-slate-800">Banks</h3>
+            <p class="text-slate-600 leading-relaxed">Disburse approved subsidy funds to producers with secure financial processes</p>
+       
+        </div>
+    </div> -->
+
+    <!-- Enhanced Light Process Flow -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">How It Works</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">1</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Submit Application</h3>
+                <p class="text-slate-600 leading-relaxed">Producer submits detailed application for green hydrogen project funding with comprehensive documentation</p>
+            </div>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">2</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Audit & Verify</h3>
+                <p class="text-slate-600 leading-relaxed">Independent auditors verify project details, compliance, and technical specifications thoroughly</p>
+            </div>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">3</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Government Approval</h3>
+                <p class="text-slate-600 leading-relaxed">Government bodies review and approve qualified applications based on policy guidelines</p>
+            </div>
+            
+            <div class="process-step-light p-8 text-center group">
+                <div class="text-4xl mb-6">
+                    <span class="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-full w-20 h-20 flex items-center justify-center mx-auto text-2xl font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-300">4</span>
+                </div>
+                <h3 class="font-bold text-xl mb-4 text-slate-800">Fund Release</h3>
+                <p class="text-slate-600 leading-relaxed">Banks securely disburse approved subsidy amounts through verified financial channels</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Light 3D Action Buttons -->
+    {% if not current_user.is_authenticated %}
+    <div class="text-center mb-20">
+        <a href="{{ url_for('auth.signup') }}" class="btn-3d-light inline-block mr-8">
+            <i class="fas fa-user-plus mr-2"></i>Get Started Today
+        </a>
+        <a href="{{ url_for('auth.login') }}" class="btn-3d-light inline-block" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), 0 2px 8px rgba(236, 72, 153, 0.15);">
+            <i class="fas fa-sign-in-alt mr-2"></i>Login to Dashboard
+        </a>
+    </div>
+    {% endif %}
+
+    <!-- Green Hydrogen Information Section -->
+    <div class="fade-in-section mx-4 mb-20" data-section="hydrogen">
+        <div class="info-card p-12">
+            <h2 class="text-5xl font-bold mb-8 text-center text-slate-800">Why Green Hydrogen?</h2>
+            <p class="text-xl text-center text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+                Green hydrogen is revolutionizing the energy landscape as a clean, sustainable fuel source. 
+                Our platform facilitates government subsidies to accelerate green hydrogen adoption and combat climate change.
+            </p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="info-card p-8 text-center group scale-in delay-100" data-card="energy">
+                    <div class="simple-icon-hover text-6xl text-green-500 mb-6 group-hover:text-green-600">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">100% Clean Energy</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Produced using renewable energy sources like solar and wind, creating zero carbon emissions during production</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-green-50 p-3 rounded-lg">
+                            <div class="font-semibold text-green-700">CO2 Reduction</div>
+                            <div class="text-green-600">830 million tons/year</div>
+                        </div>
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-700">Energy Efficiency</div>
+                            <div class="text-blue-600">75% efficiency rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card p-8 text-center group scale-in delay-200" data-card="storage">
+                    <div class="simple-icon-hover text-6xl text-blue-500 mb-6 group-hover:text-blue-600">
+                        <i class="fas fa-battery-full"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">Energy Storage</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Long-term energy storage solution that can store renewable energy for months without degradation</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-blue-50 p-3 rounded-lg">
+                            <div class="font-semibold text-blue-700">Storage Duration</div>
+                            <div class="text-blue-600">Seasonal storage</div>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-700">Energy Density</div>
+                            <div class="text-purple-600">142 MJ/kg</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="info-card p-8 text-center group scale-in delay-300" data-card="applications">
+                    <div class="simple-icon-hover text-6xl text-purple-500 mb-6 group-hover:text-purple-600">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold mb-4 text-slate-800">Industrial Applications</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">Versatile fuel for steel production, ammonia synthesis, and heavy transportation sectors</p>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div class="bg-purple-50 p-3 rounded-lg">
+                            <div class="font-semibold text-purple-700">Market Size</div>
+                            <div class="text-purple-600">$201B by 2025</div>
+                        </div>
+                        <div class="bg-orange-50 p-3 rounded-lg">
+                            <div class="font-semibold text-orange-700">Job Creation</div>
+                            <div class="text-orange-600">30M+ jobs</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Benefits and Impact Section -->
+    <div class="fade-in-section mb-20 px-4" data-section="benefits">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Platform Benefits</h2>
+        <div class="grid lg:grid-cols-2 gap-12 max-w-7xl mx-auto">
+            <!-- For Producers -->
+            <div class="info-card p-10 slide-in-left" data-card="producers">
+                <div class="flex items-center mb-6">
+                    <div class="simple-icon-hover text-4xl text-green-500 mr-4">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800">For Producers</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start fade-in-section delay-100" data-benefit="1">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Streamlined Applications</h4>
+                            <p class="text-slate-600">Digital application process reduces paperwork and processing time by 70%</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-200" data-benefit="2">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Fast Track Approval</h4>
+                            <p class="text-slate-600">AI-powered pre-screening ensures quick preliminary assessment</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-300" data-benefit="3">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Real-time Tracking</h4>
+                            <p class="text-slate-600">Monitor application status and receive instant notifications</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-400" data-benefit="4">
+                        <i class="fas fa-check-circle text-green-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Expert Support</h4>
+                            <p class="text-slate-600">Access to technical consultants and regulatory guidance</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- For Government -->
+            <div class="info-card p-10 slide-in-right" data-card="government">
+                <div class="flex items-center mb-6">
+                    <div class="simple-icon-hover text-4xl text-blue-500 mr-4">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="text-3xl font-bold text-slate-800">For Government</h3>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex items-start fade-in-section delay-100" data-benefit="5">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Transparent Process</h4>
+                            <p class="text-slate-600">Complete audit trail and blockchain-based verification system</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-200" data-benefit="6">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Policy Analytics</h4>
+                            <p class="text-slate-600">Data-driven insights for policy optimization and impact assessment</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-300" data-benefit="7">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Fraud Prevention</h4>
+                            <p class="text-slate-600">Multi-layer verification prevents fraudulent subsidy claims</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start fade-in-section delay-400" data-benefit="8">
+                        <i class="fas fa-check-circle text-blue-500 mt-1 mr-3"></i>
+                        <div>
+                            <h4 class="font-semibold text-slate-800">Budget Optimization</h4>
+                            <p class="text-slate-600">Smart allocation algorithms maximize subsidy impact</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Statistics and Impact -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Our Impact</h2>
+        <div class="grid md:grid-cols-4 gap-8">
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-green-500 mb-4 group-hover:text-green-600">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">2,500+</div>
+                <div class="text-lg text-slate-600">Projects Funded</div>
+                <div class="text-sm text-slate-500 mt-2">Across 15 countries</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
+                    <i class="fas fa-dollar-sign"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">$12.5B</div>
+                <div class="text-lg text-slate-600">Subsidies Distributed</div>
+                <div class="text-sm text-slate-500 mt-2">Since 2023</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-purple-500 mb-4 group-hover:text-purple-600">
+                    <i class="fas fa-seedling"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">85M</div>
+                <div class="text-lg text-slate-600">Tons CO2 Reduced</div>
+                <div class="text-sm text-slate-500 mt-2">Annual impact</div>
+            </div>
+            
+            <div class="text-center group">
+                <div class="icon-3d-light text-5xl text-orange-500 mb-4 group-hover:text-orange-600">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="text-4xl font-bold text-slate-800 mb-2">150,000</div>
+                <div class="text-lg text-slate-600">Jobs Created</div>
+                <div class="text-sm text-slate-500 mt-2">Green energy sector</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Technology Features -->
+    <div class="fade-in-section mb-20 px-4" data-section="technology">
+        <h2 class="text-5xl font-bold mb-12 text-center text-slate-800">Advanced Technology</h2>
+        <div class="grid lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+            <div class="info-card p-8 text-center scale-in" data-card="blockchain">
+                <div class="simple-icon-hover text-6xl text-indigo-500 mb-6">
+                    <i class="fas fa-cube"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">Blockchain Security</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Immutable transaction records and smart contracts ensure complete transparency and security</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-shield-alt text-indigo-500 mr-2"></i>256-bit encryption</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-link text-indigo-500 mr-2"></i>Immutable audit trail</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-file-contract text-indigo-500 mr-2"></i>Smart contract automation</li>
+                </ul>
+            </div>
+            
+            <div class="info-card p-8 text-center scale-in delay-200" data-card="ai">
+                <div class="simple-icon-hover text-6xl text-pink-500 mb-6">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">AI-Powered Analytics</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Machine learning algorithms optimize subsidy allocation and predict project success rates</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-brain text-pink-500 mr-2"></i>Predictive modeling</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-chart-line text-pink-500 mr-2"></i>Risk assessment</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-cogs text-pink-500 mr-2"></i>Process optimization</li>
+                </ul>
+            </div>
+            
+            <div class="info-card p-8 text-center scale-in delay-400" data-card="cloud">
+                <div class="simple-icon-hover text-6xl text-teal-500 mb-6">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3 class="text-2xl font-bold mb-4 text-slate-800">Cloud Infrastructure</h3>
+                <p class="text-slate-600 leading-relaxed mb-6">Scalable, secure cloud platform with 99.9% uptime and global accessibility</p>
+                <ul class="text-left text-sm text-slate-600 space-y-2">
+                    <li class="fade-in-section delay-100"><i class="fas fa-server text-teal-500 mr-2"></i>Auto-scaling architecture</li>
+                    <li class="fade-in-section delay-200"><i class="fas fa-globe text-teal-500 mr-2"></i>Global CDN</li>
+                    <li class="fade-in-section delay-300"><i class="fas fa-backup text-teal-500 mr-2"></i>Real-time backups</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sustainability Goals -->
+    <div class="process-flow-light p-12 mx-4 mb-20">
+        <h2 class="text-5xl font-bold mb-8 text-center text-slate-800">Sustainability Goals</h2>
+        <p class="text-xl text-center text-slate-600 mb-12 max-w-4xl mx-auto leading-relaxed">
+            Aligned with UN Sustainable Development Goals and Paris Climate Agreement targets
+        </p>
+        
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🎯</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Carbon Neutral by 2030</h4>
+                <p class="text-slate-600 text-sm">Supporting global carbon neutrality through green hydrogen adoption</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">♻️</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Circular Economy</h4>
+                <p class="text-slate-600 text-sm">Promoting renewable energy cycles and sustainable production</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🌱</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Green Jobs</h4>
+                <p class="text-slate-600 text-sm">Creating sustainable employment in the clean energy sector</p>
+            </div>
+            
+            <div class="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-shadow duration-300">
+                <div class="text-3xl mb-4">🌍</div>
+                <h4 class="font-bold text-lg mb-2 text-slate-800">Global Impact</h4>
+                <p class="text-slate-600 text-sm">Scaling solutions worldwide for maximum environmental benefit</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Call to Action -->
+    {% if not current_user.is_authenticated %}
+    <div class="text-center mb-20">
+        <div class="process-flow-light p-12 mx-4">
+            <h2 class="text-4xl font-bold mb-6 text-slate-800">Ready to Transform the Future?</h2>
+            <p class="text-xl text-slate-600 mb-8 max-w-3xl mx-auto">
+                Join thousands of organizations already using SmartHydroPay to accelerate green hydrogen adoption and build a sustainable future.
+            </p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                <a href="{{ url_for('auth.signup') }}" class="btn-3d-light inline-block">
+                    <i class="fas fa-rocket mr-2"></i>Start Your Journey Today
+                </a>
+                <a href="{{ url_for('auth.login') }}" class="btn-3d-light inline-block" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); box-shadow: 0 8px 20px rgba(139, 92, 246, 0.2), 0 2px 8px rgba(236, 72, 153, 0.15);">
+                    <i class="fas fa-sign-in-alt mr-2"></i>Access Your Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+// Enhanced Light Particle Animation System
+function createLightParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'particle-light';
+    const size = Math.random() * 6 + 2;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 20 + 's';
+    particle.style.animationDuration = (Math.random() * 15 + 15) + 's';
+    return particle;
+}
+
+function initLightParticles() {
+    const container = document.getElementById('particleContainerLight');
+    for (let i = 0; i < 30; i++) {
+        container.appendChild(createLightParticle());
+    }
+}
+
+// 3D Model Renderers for Green Hydrogen Theme
+class HydrogenMolecule {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        // Create hydrogen molecule (H2)
+        this.group = new THREE.Group();
+        
+        // Hydrogen atoms
+        const atomGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+        const atomMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x10b981,
+            shininess: 100,
+            transparent: true,
+            opacity: 0.9
+        });
+        
+        const atom1 = new THREE.Mesh(atomGeometry, atomMaterial);
+        const atom2 = new THREE.Mesh(atomGeometry, atomMaterial);
+        atom1.position.set(-0.5, 0, 0);
+        atom2.position.set(0.5, 0, 0);
+        
+        // Bond
+        const bondGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+        const bondMaterial = new THREE.MeshPhongMaterial({ color: 0x3b82f6 });
+        const bond = new THREE.Mesh(bondGeometry, bondMaterial);
+        bond.rotation.z = Math.PI / 2;
+        
+        this.group.add(atom1, atom2, bond);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.z = 3;
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.x += 0.01;
+        this.group.rotation.y += 0.02;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class SolarPanel {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Solar panel
+        const panelGeometry = new THREE.BoxGeometry(2, 1.2, 0.1);
+        const panelMaterial = new THREE.MeshPhongMaterial({ 
+            color: 0x1e3a8a,
+            shininess: 80
+        });
+        const panel = new THREE.Mesh(panelGeometry, panelMaterial);
+        
+        // Support structure
+        const supportGeometry = new THREE.CylinderGeometry(0.05, 0.05, 1, 8);
+        const supportMaterial = new THREE.MeshPhongMaterial({ color: 0x6b7280 });
+        const support = new THREE.Mesh(supportGeometry, supportMaterial);
+        support.position.y = -0.7;
+        
+        this.group.add(panel, support);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(2, 1, 3);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.y += 0.005;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class WindTurbine {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Tower
+        const towerGeometry = new THREE.CylinderGeometry(0.1, 0.15, 3, 8);
+        const towerMaterial = new THREE.MeshPhongMaterial({ color: 0x9ca3af });
+        const tower = new THREE.Mesh(towerGeometry, towerMaterial);
+        tower.position.y = -0.5;
+        
+        // Nacelle
+        const nacelleGeometry = new THREE.BoxGeometry(0.3, 0.2, 0.8);
+        const nacelleMaterial = new THREE.MeshPhongMaterial({ color: 0xf3f4f6 });
+        const nacelle = new THREE.Mesh(nacelleGeometry, nacelleMaterial);
+        nacelle.position.y = 1;
+        
+        // Blades
+        this.bladesGroup = new THREE.Group();
+        for (let i = 0; i < 3; i++) {
+            const bladeGeometry = new THREE.BoxGeometry(0.05, 1.5, 0.02);
+            const bladeMaterial = new THREE.MeshPhongMaterial({ color: 0xe5e7eb });
+            const blade = new THREE.Mesh(bladeGeometry, bladeMaterial);
+            blade.position.y = 0.75;
+            blade.rotation.z = (i * Math.PI * 2) / 3;
+            this.bladesGroup.add(blade);
+        }
+        this.bladesGroup.position.set(0, 1, 0.4);
+        
+        this.group.add(tower, nacelle, this.bladesGroup);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(3, 2, 4);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.bladesGroup.rotation.z += 0.1;
+        this.group.rotation.y += 0.002;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+class Factory {
+    constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.scene = new THREE.Scene();
+        this.camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
+        this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, alpha: true, antialias: true });
+        this.renderer.setSize(200, 200);
+        this.renderer.setClearColor(0x000000, 0);
+        
+        this.group = new THREE.Group();
+        
+        // Main building
+        const buildingGeometry = new THREE.BoxGeometry(2, 1.5, 1.5);
+        const buildingMaterial = new THREE.MeshPhongMaterial({ color: 0x64748b });
+        const building = new THREE.Mesh(buildingGeometry, buildingMaterial);
+        building.position.y = 0.25;
+        
+        // Smokestacks (converted to green emission for hydrogen)
+        for (let i = 0; i < 3; i++) {
+            const stackGeometry = new THREE.CylinderGeometry(0.1, 0.12, 1.5, 8);
+            const stackMaterial = new THREE.MeshPhongMaterial({ color: 0x374151 });
+            const stack = new THREE.Mesh(stackGeometry, stackMaterial);
+            stack.position.set(-0.6 + i * 0.6, 1.5, 0);
+            
+            // Green emission particles
+            const emissionGeometry = new THREE.SphereGeometry(0.05, 8, 8);
+            const emissionMaterial = new THREE.MeshPhongMaterial({ 
+                color: 0x10b981,
+                transparent: true,
+                opacity: 0.7
+            });
+            const emission = new THREE.Mesh(emissionGeometry, emissionMaterial);
+            emission.position.set(-0.6 + i * 0.6, 2.3, 0);
+            
+            this.group.add(stack, emission);
+        }
+        
+        this.group.add(building);
+        this.scene.add(this.group);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 1);
+        this.scene.add(ambientLight, directionalLight);
+        
+        this.camera.position.set(3, 2, 4);
+        this.camera.lookAt(0, 0, 0);
+        this.animate();
+    }
+    
+    animate() {
+        requestAnimationFrame(() => this.animate());
+        this.group.rotation.y += 0.003;
+        this.renderer.render(this.scene, this.camera);
+    }
+}
+
+// Enhanced scroll animations
+function animateOnScrollLight() {
+    const cards = document.querySelectorAll('.card-3d-light');
+    const processSteps = document.querySelectorAll('.process-step-light');
+    const fadeElements = document.querySelectorAll('.fade-in-section');
+    const scaleElements = document.querySelectorAll('.scale-in');
+    const slideElements = document.querySelectorAll('.slide-in-left, .slide-in-right');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                    entry.target.classList.add('visible');
+                }, index * 150);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    // Observe new animation elements
+    const allElements = [...cards, ...processSteps, ...fadeElements, ...scaleElements, ...slideElements];
+    allElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(50px) scale(0.95)';
+        el.style.transition = 'all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        observer.observe(el);
+    });
+}
+
+// Enhanced mouse parallax effect
+function initLightParallax() {
+    document.addEventListener('mousemove', (e) => {
+        const cards = document.querySelectorAll('.card-3d-light');
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        
+        cards.forEach((card, index) => {
+            const intensity = (index + 1) * 0.3;
+            const rotateX = (y - 50) * intensity * 0.05;
+            const rotateY = (x - 50) * intensity * 0.05;
+            
+            card.style.transform += ` perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+    });
+}
+
+// Initialize all features
+document.addEventListener('DOMContentLoaded', () => {
+    initLightParticles();
+    animateOnScrollLight();
+    initLightParallax();
+    
+    // Initialize fade-in animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all animation elements
+    document.querySelectorAll('.fade-in-section, .slide-in-left, .slide-in-right, .scale-in').forEach(el => {
+        fadeObserver.observe(el);
+    });
+    
+    // Initialize 3D models
+    setTimeout(() => {
+        if (typeof THREE !== 'undefined') {
+            new HydrogenMolecule('hydrogenCanvas');
+            new SolarPanel('solarCanvas');
+            new WindTurbine('windCanvas');
+            new Factory('factoryCanvas');
+        }
+    }, 500);
+    
+    // Periodic particle refresh
+    setInterval(() => {
+        const container = document.getElementById('particleContainerLight');
+        if (container && container.children.length < 30) {
+            container.appendChild(createLightParticle());
+        }
+    }, 2000);
+});
+
+// Enhanced button interactions
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.btn-3d-light').forEach(button => {
+        button.addEventListener('click', function(e) {
+            const ripple = document.createElement('span');
+            const rect = this.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = x + 'px';
+            ripple.style.top = y + 'px';
+            ripple.classList.add('ripple-light');
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+});
+</script>
+
+<style>
+.ripple-light {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.4);
+    transform: scale(0);
+    animation: rippleEffectLight 0.6s ease-out;
+    pointer-events: none;
+}
+
+@keyframes rippleEffectLight {
+    to {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-3d-light:hover {
+        transform: translateY(-8px) scale(1.02);
+    }
+    
+    .model-container {
+        width: 150px;
+        height: 150px;
+    }
+    
+    .hero-content h1 {
+        font-size: 3rem;
+    }
+    
+    .hero-content p {
+        font-size: 1.2rem;
+        padding: 1rem 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+    
+    .model-container {
+        width: 120px;
+        height: 120px;
+    }
+}
+</style>
+
+{% endblock %}

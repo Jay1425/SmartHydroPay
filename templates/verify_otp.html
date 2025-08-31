@@ -1,0 +1,404 @@
+{% extends "base.html" %}
+
+{% block title %}Verify OTP{% endblock %}
+
+{% block content %}
+<style>
+    /* Reset and base styles */
+    * {
+        box-sizing: border-box;
+    }
+    
+    .font-inter { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+    }
+    
+    /* OTP Verification Page Styles */
+    .otp-hero-section {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e1f5fe 25%, #e8f5e8 50%, #f3e5f5 75%, #fff3e0 100%);
+        background-attachment: fixed;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .otp-floating-3d-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .otp-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 450px;
+        margin: 0 auto;
+    }
+
+    /* Optimized floating animation */
+    .otp-floating-element {
+        animation: otpGentleFloat 6s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    @keyframes otpGentleFloat {
+        0%, 100% { 
+            transform: translateY(0px) scale(1); 
+        }
+        50% { 
+            transform: translateY(-10px) scale(1.01); 
+        }
+    }
+
+    /* Optimized OTP card */
+    .otp-card-3d-light {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.1),
+            0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        transition: all 0.3s ease-out;
+        animation: otpCardEntrance 0.8s ease-out;
+        will-change: transform;
+    }
+
+    @keyframes otpCardEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .otp-card-3d-light:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.15),
+            0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Simplified icon animation */
+    .otp-icon-3d-light {
+        display: inline-block;
+        transition: all 0.4s ease;
+        animation: otpIconPulse 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes otpIconPulse {
+        0%, 100% { 
+            transform: scale(1);
+            filter: drop-shadow(0 4px 8px rgba(16, 185, 129, 0.3));
+        }
+        50% { 
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 12px rgba(59, 130, 246, 0.4));
+        }
+    }
+
+    .otp-icon-3d-light:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Simplified text animation */
+    .otp-text-glow-light {
+        background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: otpTextShimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes otpTextShimmer {
+        0%, 100% { 
+            background: linear-gradient(135deg, #1e293b, #0f766e, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        50% { 
+            background: linear-gradient(135deg, #0f766e, #1d4ed8, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    /* OTP input styling */
+    .otp-input-3d {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(200, 200, 200, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        width: 100%;
+        font-size: 1.5rem;
+        text-align: center;
+        letter-spacing: 0.5rem;
+        transition: all 0.3s ease;
+        color: #1e293b;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        font-weight: 600;
+    }
+
+    .otp-input-3d:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 1);
+        border-color: #3b82f6;
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .otp-input-3d::placeholder {
+        color: #94a3b8;
+        letter-spacing: normal;
+        font-weight: normal;
+        font-size: 1rem;
+    }
+
+    .otp-label-3d {
+        display: block;
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Optimized button */
+    .otp-btn-3d-light {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .otp-btn-3d-light:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+        background: linear-gradient(135deg, #059669, #2563eb);
+    }
+
+    .otp-btn-3d-light:active {
+        transform: translateY(0);
+    }
+
+    .otp-link-3d {
+        color: #3b82f6;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .otp-link-3d:hover {
+        color: #1d4ed8;
+        transform: translateY(-1px);
+    }
+
+    .otp-link-3d::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #3b82f6;
+        transition: width 0.3s ease;
+    }
+
+    .otp-link-3d:hover::after {
+        width: 100%;
+    }
+
+    /* Simple gradient border animation */
+    .otp-gradient-border {
+        background: linear-gradient(135deg, #10b981, #3b82f6);
+        padding: 2px;
+        border-radius: 16px;
+        display: inline-block;
+        animation: otpBorderPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes otpBorderPulse {
+        0%, 100% { 
+            background: linear-gradient(135deg, #10b981, #3b82f6);
+        }
+        50% { 
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+        }
+    }
+
+    .otp-gradient-border-inner {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 14px;
+        padding: 1.25rem;
+    }
+
+    .otp-info-box {
+        background: rgba(59, 130, 246, 0.1);
+        border: 1px solid rgba(59, 130, 246, 0.2);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        color: #1e40af;
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .otp-card-3d-light {
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .otp-hero-section {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .otp-card-3d-light {
+            padding: 1.5rem;
+            border-radius: 20px;
+        }
+        
+        .otp-gradient-border-inner {
+            padding: 1rem;
+        }
+
+        .otp-input-3d {
+            font-size: 1.2rem;
+            letter-spacing: 0.3rem;
+        }
+    }
+</style>
+
+<!-- OTP Verification Hero Section -->
+<div class="otp-hero-section">
+    <div class="otp-floating-3d-container">
+        <div id="otpParticleContainer"></div>
+    </div>
+    
+    <div class="otp-content">
+        <div class="otp-floating-element">
+            <div class="otp-card-3d-light">
+                <div class="text-center mb-8">
+                    <div class="otp-gradient-border mb-6">
+                        <div class="otp-gradient-border-inner">
+                            <div class="otp-icon-3d-light text-5xl text-green-500">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold otp-text-glow-light mb-3">Email Verification</h2>
+                    <p class="text-lg text-slate-600 font-medium">Enter the 6-digit code sent to your email</p>
+                </div>
+
+                <div class="otp-info-box">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    Check your email for the verification code. The code expires in 5 minutes.
+                </div>
+
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="mb-6">
+                        {{ form.otp_code.label(class="otp-label-3d") }}
+                        {{ form.otp_code(class="otp-input-3d", placeholder="000000", maxlength="6") }}
+                        {% if form.otp_code.errors %}
+                            {% for error in form.otp_code.errors %}
+                                <div class="text-red-500 text-sm mt-1">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="mb-6">
+                        <button type="submit" class="otp-btn-3d-light">
+                            <i class="fas fa-check mr-2"></i>Verify & Continue
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center">
+                    <p class="text-slate-600 text-base">
+                        Didn't receive the code? 
+                        <a href="{{ url_for('auth.login') }}" class="otp-link-3d">Try logging in again</a>
+                    </p>
+                    <p class="text-slate-500 text-sm mt-2">
+                        Or go back to 
+                        <a href="{{ url_for('auth.login') }}" class="otp-link-3d">Login</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// OTP input formatting
+document.addEventListener('DOMContentLoaded', function() {
+    const otpInput = document.querySelector('.otp-input-3d');
+    
+    if (otpInput) {
+        otpInput.addEventListener('input', function(e) {
+            // Remove non-digits
+            let value = e.target.value.replace(/\D/g, '');
+            
+            // Limit to 6 digits
+            if (value.length > 6) {
+                value = value.substring(0, 6);
+            }
+            
+            e.target.value = value;
+            
+            // Auto-submit when 6 digits are entered
+            if (value.length === 6) {
+                setTimeout(() => {
+                    e.target.form.submit();
+                }, 500);
+            }
+        });
+
+        // Focus on load
+        otpInput.focus();
+    }
+
+    // Handle form submission animation
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('.otp-btn-3d-light');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Verifying...';
+                button.disabled = true;
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

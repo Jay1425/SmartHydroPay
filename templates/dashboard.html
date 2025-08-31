@@ -1,0 +1,362 @@
+
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<style>
+    .dashboard-hero {
+        min-height: 40vh;
+        background: linear-gradient(135deg, #e1f5fe 0%, #e8f5e8 50%, #f3e5f5 100%);
+        border-radius: 32px;
+        box-shadow: 0 8px 32px rgba(59,130,246,0.08);
+        position: relative;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    .icon-3d-light {
+        font-size: 4.5rem;
+        color: #a78bfa;
+        filter: drop-shadow(0 4px 16px rgba(139,92,246,0.15));
+        transition: all 0.4s cubic-bezier(0.68,-0.55,0.265,1.55);
+    }
+    .icon-3d-light:hover {
+        transform: rotateY(360deg) scale(1.15);
+        color: #3b82f6;
+    }
+    .dashboard-title {
+        font-size: 3rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, #6d28d9, #a78bfa);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        margin-bottom: 0.5rem;
+    }
+    .dashboard-welcome {
+        font-size: 1.2rem;
+        color: #334155;
+        background: rgba(255,255,255,0.7);
+        border-radius: 16px;
+        padding: 0.5rem 1.5rem;
+        display: inline-block;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .card-3d-light {
+        background: linear-gradient(145deg, rgba(255,255,255,0.95), rgba(248,250,252,0.9));
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        box-shadow: 0 10px 30px rgba(139,92,246,0.04);
+        border: 1px solid rgba(203, 213, 225, 0.3);
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    .card-3d-light:hover {
+        transform: perspective(600px) rotateY(12deg) rotateX(8deg) scale(1.07);
+        box-shadow: 0 25px 50px rgba(139,92,246,0.12);
+        border-color: rgba(139,92,246,0.3);
+    }
+    .status-badge {
+        padding: 0.3em 1em;
+        border-radius: 12px;
+        font-size: 0.9em;
+        font-weight: 600;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        transition: all 0.3s;
+        display: inline-block;
+    }
+    .status-pending {
+        background: linear-gradient(135deg, #fef3c7, #fde68a);
+        color: #92400e;
+    }
+    .status-verified {
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #1e40af;
+    }
+    .status-approved {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #166534;
+    }
+    .status-released {
+        background: linear-gradient(135deg, #f3e8ff, #e9d5ff);
+        color: #7c2d12;
+    }
+    .status-rejected {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #991b1b;
+    }
+</style>
+
+<div class="dashboard-hero flex flex-col items-center justify-center text-center mb-12">
+    <div class="icon-3d-light">
+        {% if current_user.role == 'producer' %}
+            <i class="fas fa-industry"></i>
+        {% elif current_user.role == 'auditor' %}
+            <i class="fas fa-search"></i>
+        {% elif current_user.role == 'government' %}
+            <i class="fas fa-building"></i>
+        {% elif current_user.role == 'bank' %}
+            <i class="fas fa-university"></i>
+        {% else %}
+            <i class="fas fa-tachometer-alt"></i>
+        {% endif %}
+    </div>
+    <div class="dashboard-title">Dashboard</div>
+    <div class="dashboard-welcome">
+        Welcome back, <a href="" class="text-blue-600 hover:underline font-bold transition-all duration-200">{{ current_user.name }}</a> ({{ current_user.role.title() }})
+    </div>
+    <div class="flex justify-center gap-4 mt-6">
+        <!-- Profile buttons removed; now only in navbar -->
+    </div>
+</div>
+
+{% if current_user.role == 'producer' %}
+    <div class="dashboard-cards flex flex-col md:flex-row gap-6 mb-8">
+        <div class="card-3d-light group text-center p-8 flex-1">
+            <div class="icon-3d-light text-5xl text-green-500 mb-4 group-hover:text-green-600">
+                <i class="fas fa-plus"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Quick Actions</h3>
+            <a href="{{ url_for('producer.apply') }}" class="btn-3d-light inline-block mt-4">
+                <i class="fas fa-paper-plane mr-2"></i>Submit New Application
+            </a>
+        </div>
+        <div class="card-3d-light group text-center p-8 flex-1">
+            <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Application Stats</h3>
+            <div class="space-y-2 mt-4">
+                <div class="flex justify-between">
+                    <span>Total Applications:</span>
+                    <span class="font-bold">{{ applications|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Pending:</span>
+                    <span class="status-badge status-pending">{{ applications|selectattr('status', 'equalto', 'pending')|list|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Approved:</span>
+                    <span class="status-badge status-approved">{{ applications|selectattr('status', 'equalto', 'govt_approved')|list|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="dashboard-table">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-file-alt mr-2"></i>Your Applications
+        </h3>
+        {% if applications %}
+            <div class="overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg shadow-md">
+                <thead class="bg-blue-50">
+                    <tr>
+                        <th class="px-4 py-2 text-left">Project Name</th>
+                        <th class="px-4 py-2 text-left">Capacity (MW)</th>
+                        <th class="px-4 py-2 text-left">Status</th>
+                        <th class="px-4 py-2 text-left">Submitted</th>
+                        <th class="px-4 py-2 text-left">Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr class="border-t hover:bg-blue-50">
+                        <td class="px-4 py-2 font-semibold">{{ app.project_name }}</td>
+                        <td class="px-4 py-2">{{ app.capacity }}</td>
+                        <td class="px-4 py-2">
+                            <span class="status-badge
+                                {% if app.status == 'pending' %}status-pending
+                                {% elif app.status == 'auditor_verified' %}status-verified
+                                {% elif app.status == 'govt_approved' %}status-approved
+                                {% elif app.status == 'fund_released' %}status-released
+                                {% else %}status-rejected{% endif %}">
+                                {{ app.status.replace('_', ' ').title() }}
+                            </span>
+                        </td>
+                        <td class="px-4 py-2">{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td class="px-4 py-2 text-sm text-gray-600">{{ app.project_details }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications submitted yet. <a href="{{ url_for('producer.apply') }}" class="text-blue-600">Submit your first application</a></p>
+        {% endif %}
+    </div>
+{% elif current_user.role == 'auditor' %}
+    <div class="dashboard-cards">
+        <div class="card-3d-light group text-center p-8">
+            <div class="icon-3d-light text-5xl text-purple-500 mb-4 group-hover:text-purple-600">
+                <i class="fas fa-search"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Applications Pending Verification</h3>
+        </div>
+    </div>
+    <div class="dashboard-table">
+        {% if applications %}
+            <table class="w-full table-auto">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Producer</th>
+                        <th>Capacity (MW)</th>
+                        <th>Submitted</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.project_name }}</td>
+                        <td>{{ app.producer.name }}</td>
+                        <td>{{ app.capacity }}</td>
+                        <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('auditor.verify', application_id=app.id) }}" 
+                               class="btn-3d-light bg-gradient-to-r from-purple-500 to-purple-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-eye mr-1"></i>Verify
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications pending verification.</p>
+        {% endif %}
+    </div>
+{% elif current_user.role == 'government' %}
+    <div class="dashboard-cards">
+        <div class="card-3d-light group text-center p-8">
+            <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
+                <i class="fas fa-building"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Applications Ready for Approval</h3>
+        </div>
+    </div>
+    <div class="dashboard-table">
+        {% if applications %}
+            <table class="w-full table-auto">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Producer</th>
+                        <th>Capacity (MW)</th>
+                        <th>Verified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.project_name }}</td>
+                        <td>{{ app.producer.name }}</td>
+                        <td>{{ app.capacity }}</td>
+                        <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('government.view_application', application_id=app.id) }}" 
+                               class="btn-3d-light bg-gradient-to-r from-blue-500 to-blue-600 text-white px-3 py-1 rounded text-sm mr-2">
+                                <i class="fas fa-eye mr-1"></i>View
+                            </a>
+                            <a href="{{ url_for('government.approve', application_id=app.id) }}" 
+                               class="btn-3d-light bg-gradient-to-r from-green-500 to-green-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-check mr-1"></i>Approve
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications ready for approval.</p>
+        {% endif %}
+    </div>
+{% elif current_user.role == 'bank' %}
+    <div class="dashboard-cards">
+        <div class="card-3d-light group text-center p-8">
+            <div class="icon-3d-light text-5xl text-orange-500 mb-4 group-hover:text-orange-600">
+                <i class="fas fa-university"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Fund Release Stats</h3>
+            <div class="space-y-2 mt-4">
+                <div class="flex justify-between">
+                    <span>Pending Releases:</span>
+                    <span class="status-badge status-pending">{{ applications|length }}</span>
+                </div>
+                <div class="flex justify-between">
+                    <span>Total Released:</span>
+                    <span class="status-badge status-approved">{{ transactions|length }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="card-3d-light group text-center p-8">
+            <div class="icon-3d-light text-5xl text-blue-500 mb-4 group-hover:text-blue-600">
+                <i class="fas fa-dollar-sign"></i>
+            </div>
+            <h3 class="text-xl font-bold mb-2 text-slate-800">Quick Actions</h3>
+            <a href="{{ url_for('bank.pending_releases') }}" class="btn-3d-light inline-block mt-4">
+                <i class="fas fa-clock mr-2"></i>View Pending Releases
+            </a>
+        </div>
+    </div>
+    <div class="dashboard-table">
+        <h3 class="text-lg font-semibold mb-4">
+            <i class="fas fa-clock mr-2"></i>Applications Ready for Fund Release
+        </h3>
+        {% if applications %}
+            <table class="w-full table-auto">
+                <thead>
+                    <tr>
+                        <th>Project Name</th>
+                        <th>Producer</th>
+                        <th>Capacity (MW)</th>
+                        <th>Approved</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for app in applications %}
+                    <tr>
+                        <td>{{ app.project_name }}</td>
+                        <td>{{ app.producer.name }}</td>
+                        <td>{{ app.capacity }}</td>
+                        <td>{{ app.created_at.strftime('%Y-%m-%d') }}</td>
+                        <td>
+                            <a href="{{ url_for('bank.release', application_id=app.id) }}" 
+                               class="btn-3d-light bg-gradient-to-r from-orange-500 to-orange-600 text-white px-3 py-1 rounded text-sm">
+                                <i class="fas fa-paper-plane mr-1"></i>Release Funds
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No applications ready for fund release.</p>
+        {% endif %}
+    </div>
+{% endif %}
+
+<script>
+// Animate dashboard cards and tables on scroll
+function animateDashboardCards() {
+    const cards = document.querySelectorAll('.card-3d-light');
+    const tables = document.querySelectorAll('.dashboard-table');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, index) => {
+            if (entry.isIntersecting) {
+                setTimeout(() => {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0) scale(1)';
+                }, index * 120);
+            }
+        });
+    }, { threshold: 0.1 });
+    [...cards, ...tables].forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(40px) scale(0.97)';
+        el.style.transition = 'all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        observer.observe(el);
+    });
+}
+document.addEventListener('DOMContentLoaded', animateDashboardCards);
+</script>
+{% endblock %}

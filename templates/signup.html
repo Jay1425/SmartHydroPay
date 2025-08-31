@@ -1,0 +1,692 @@
+{% extends "base.html" %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+<style>
+    /* Reset and base styles */
+    * {
+        box-sizing: border-box;
+    }
+    
+    .font-inter { 
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+    }
+    
+    /* Signup Page Optimized Animation Styles */
+    .signup-hero-section {
+        position: relative;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #f8fafc 0%, #e1f5fe 25%, #e8f5e8 50%, #f3e5f5 75%, #fff3e0 100%);
+        background-attachment: fixed;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem 1rem;
+    }
+
+    .signup-floating-3d-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+    }
+
+    .signup-content {
+        position: relative;
+        z-index: 10;
+        width: 100%;
+        max-width: 480px;
+        margin: 0 auto;
+    }
+
+    /* Optimized floating animation */
+    .signup-floating-element {
+        animation: signupGentleFloat 6s ease-in-out infinite;
+        will-change: transform;
+    }
+
+    @keyframes signupGentleFloat {
+        0%, 100% { 
+            transform: translateY(0px) scale(1); 
+        }
+        50% { 
+            transform: translateY(-10px) scale(1.01); 
+        }
+    }
+
+    /* Optimized signup card */
+    .signup-card-3d-light {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(20px);
+        border-radius: 24px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 
+            0 20px 40px rgba(0, 0, 0, 0.1),
+            0 5px 15px rgba(0, 0, 0, 0.05);
+        padding: 2.5rem;
+        transition: all 0.3s ease-out;
+        animation: signupCardEntrance 0.8s ease-out;
+        will-change: transform;
+    }
+
+    @keyframes signupCardEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+    }
+
+    .signup-card-3d-light:hover {
+        transform: translateY(-5px) scale(1.01);
+        box-shadow: 
+            0 25px 50px rgba(0, 0, 0, 0.15),
+            0 10px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Simplified icon animation */
+    .signup-icon-3d-light {
+        display: inline-block;
+        transition: all 0.4s ease;
+        animation: signupIconPulse 3s ease-in-out infinite;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+
+    @keyframes signupIconPulse {
+        0%, 100% { 
+            transform: scale(1);
+            filter: drop-shadow(0 4px 8px rgba(34, 197, 94, 0.3));
+        }
+        50% { 
+            transform: scale(1.05);
+            filter: drop-shadow(0 6px 12px rgba(16, 185, 129, 0.4));
+        }
+    }
+
+    .signup-icon-3d-light:hover {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    /* Simplified text animation */
+    .signup-text-glow-light {
+        background: linear-gradient(135deg, #1e293b, #059669, #16a34a);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: signupTextShimmer 4s ease-in-out infinite;
+    }
+
+    @keyframes signupTextShimmer {
+        0%, 100% { 
+            background: linear-gradient(135deg, #1e293b, #059669, #16a34a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        50% { 
+            background: linear-gradient(135deg, #059669, #16a34a, #22c55e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    }
+
+    /* Simplified form animations */
+    .signup-form-field {
+        position: relative;
+        margin-bottom: 1.5rem;
+        opacity: 0;
+        animation: signupFieldSlideIn 0.6s ease-out forwards;
+    }
+
+    .signup-form-field:nth-child(1) { animation-delay: 0.1s; }
+    .signup-form-field:nth-child(2) { animation-delay: 0.15s; }
+    .signup-form-field:nth-child(3) { animation-delay: 0.2s; }
+    .signup-form-field:nth-child(4) { animation-delay: 0.25s; }
+    .signup-form-field:nth-child(5) { animation-delay: 0.3s; }
+    .signup-form-field:nth-child(6) { animation-delay: 0.35s; }
+
+    @keyframes signupFieldSlideIn {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Optimized input styling */
+    .signup-input-3d {
+        background: rgba(255, 255, 255, 0.9);
+        border: 2px solid rgba(200, 200, 200, 0.3);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        width: 100%;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        color: #1e293b;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .signup-input-3d:focus {
+        outline: none;
+        background: rgba(255, 255, 255, 1);
+        border-color: #22c55e;
+        transform: translateY(-1px);
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .signup-input-3d::placeholder {
+        color: #94a3b8;
+    }
+
+    .signup-label-3d {
+        display: block;
+        color: #374151;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    /* Optimized button */
+    .signup-btn-3d-light {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        border: none;
+        border-radius: 12px;
+        padding: 1rem 2rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        width: 100%;
+        box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        animation: signupButtonEntrance 0.6s ease-out 0.4s forwards;
+    }
+
+    @keyframes signupButtonEntrance {
+        0% {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .signup-btn-3d-light:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+        background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+
+    .signup-btn-3d-light:active {
+        transform: translateY(0);
+    }
+
+    .signup-link-3d {
+        color: #22c55e;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .signup-link-3d:hover {
+        color: #16a34a;
+        transform: translateY(-1px);
+    }
+
+    .signup-link-3d::after {
+        content: '';
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #22c55e;
+        transition: width 0.3s ease;
+    }
+
+    .signup-link-3d:hover::after {
+        width: 100%;
+    }
+
+    /* Simplified particles */
+    .signup-particle-light {
+        position: absolute;
+        border-radius: 50%;
+        background: linear-gradient(45deg, #22c55e, #16a34a);
+        animation: signupParticleFloat 15s infinite linear;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    @keyframes signupParticleFloat {
+        0% {
+            transform: translateY(100vh) scale(0);
+            opacity: 0;
+        }
+        10% {
+            opacity: 0.6;
+            transform: scale(1);
+        }
+        90% {
+            opacity: 0.6;
+        }
+        100% {
+            transform: translateY(-100vh) scale(0);
+            opacity: 0;
+        }
+    }
+
+    /* Simplified wave */
+    .signup-wave-light {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 60px;
+        background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff' fill-opacity='0.4'%3E%3C/path%3E%3C/svg%3E") repeat-x;
+        animation: signupWave 12s linear infinite;
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    @keyframes signupWave {
+        0% { background-position-x: 0; }
+        100% { background-position-x: 1200px; }
+    }
+
+    .signup-error-message {
+        background: rgba(254, 226, 226, 0.9);
+        color: #dc2626;
+        border: 1px solid rgba(220, 38, 38, 0.3);
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-top: 0.5rem;
+        font-size: 0.875rem;
+        animation: signupErrorShake 0.4s ease-in-out;
+    }
+
+    @keyframes signupErrorShake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+
+    .signup-login-link {
+        text-align: center;
+        margin-top: 1.5rem;
+        padding: 1.25rem;
+        background: rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        border: 1px solid rgba(200, 200, 200, 0.2);
+        opacity: 0;
+        animation: signupLoginSlideUp 0.6s ease-out 0.6s forwards;
+    }
+
+    @keyframes signupLoginSlideUp {
+        0% {
+            opacity: 0;
+            transform: translateY(15px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Simple gradient border animation */
+    .signup-gradient-border {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        padding: 2px;
+        border-radius: 16px;
+        display: inline-block;
+        animation: signupBorderPulse 3s ease-in-out infinite;
+    }
+
+    @keyframes signupBorderPulse {
+        0%, 100% { 
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+        }
+        50% { 
+            background: linear-gradient(135deg, #16a34a, #15803d);
+        }
+    }
+
+    .signup-gradient-border-inner {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 14px;
+        padding: 1.25rem;
+    }
+
+    /* Role selector specific styling */
+    .signup-input-3d option {
+        background: white;
+        color: #1e293b;
+        padding: 0.5rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .signup-card-3d-light {
+            padding: 2rem;
+            margin: 1rem;
+        }
+        
+        .signup-hero-section {
+            padding: 1rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .signup-card-3d-light {
+            padding: 1.5rem;
+            border-radius: 20px;
+        }
+        
+        .signup-gradient-border-inner {
+            padding: 1rem;
+        }
+    }
+</style>
+
+<!-- Signup Hero Section with Optimized Background -->
+<div class="signup-hero-section">
+    <div class="signup-floating-3d-container">
+        <div id="signupParticleContainer"></div>
+        <div class="signup-wave-light"></div>
+    </div>
+    
+    <div class="signup-content">
+        <div class="signup-floating-element">
+            <div class="signup-card-3d-light">
+                <div class="text-center mb-8">
+                    <div class="signup-gradient-border mb-6">
+                        <div class="signup-gradient-border-inner">
+                            <div class="signup-icon-3d-light text-5xl text-green-500">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="text-3xl font-bold signup-text-glow-light mb-3">Join SmartHydroPay</h2>
+                    <p class="text-lg text-slate-600 font-medium">Create your account to get started</p>
+                </div>
+
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    
+                    <div class="signup-form-field">
+                        {{ form.name.label(class="signup-label-3d") }}
+                        {{ form.name(class="signup-input-3d", placeholder="Enter your full name") }}
+                        {% if form.name.errors %}
+                            {% for error in form.name.errors %}
+                                <div class="signup-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="signup-form-field">
+                        {{ form.email.label(class="signup-label-3d") }}
+                        {{ form.email(class="signup-input-3d", placeholder="Enter your email address") }}
+                        {% if form.email.errors %}
+                            {% for error in form.email.errors %}
+                                <div class="signup-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="signup-form-field">
+                        {{ form.password.label(class="signup-label-3d") }}
+                        {{ form.password(class="signup-input-3d", placeholder="Create a secure password") }}
+                        {% if form.password.errors %}
+                            {% for error in form.password.errors %}
+                                <div class="signup-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="signup-form-field">
+                        {{ form.role.label(class="signup-label-3d") }}
+                        {{ form.role(class="signup-input-3d") }}
+                        {% if form.role.errors %}
+                            {% for error in form.role.errors %}
+                                <div class="signup-error-message">
+                                    <i class="fas fa-exclamation-triangle mr-2"></i>{{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="signup-form-field">
+                        <button type="submit" class="signup-btn-3d-light">
+                            <i class="fas fa-user-plus mr-2"></i>Create Your Account
+                        </button>
+                    </div>
+                </form>
+
+                <div class="signup-login-link">
+                    <p class="text-slate-600 text-base">
+                        Already have an account? 
+                        <a href="{{ url_for('auth.login') }}" class="signup-link-3d">Sign in here</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Optimized Particle Animation System for Signup
+function createSignupParticle() {
+    const particle = document.createElement('div');
+    particle.className = 'signup-particle-light';
+    const size = Math.random() * 4 + 2;
+    particle.style.width = size + 'px';
+    particle.style.height = size + 'px';
+    particle.style.left = Math.random() * 100 + '%';
+    particle.style.animationDelay = Math.random() * 15 + 's';
+    particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+    return particle;
+}
+
+function initSignupParticles() {
+    const container = document.getElementById('signupParticleContainer');
+    if (!container) return;
+    
+    for (let i = 0; i < 15; i++) {
+        container.appendChild(createSignupParticle());
+    }
+}
+
+// Enhanced signup form interactions
+function initSignupFormAnimations() {
+    const inputs = document.querySelectorAll('.signup-input-3d');
+    
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.style.transform = 'translateY(-1px) scale(1.01)';
+        });
+        
+        input.addEventListener('blur', function() {
+            this.style.transform = 'translateY(0) scale(1)';
+        });
+        
+        // Real-time validation feedback
+        input.addEventListener('input', function() {
+            if (this.value.length > 0) {
+                this.style.borderColor = '#22c55e';
+                this.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)';
+            } else {
+                this.style.borderColor = 'rgba(200, 200, 200, 0.3)';
+                this.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.05)';
+            }
+        });
+    });
+    
+    // Button click effect
+    const button = document.querySelector('.signup-btn-3d-light');
+    if (button) {
+        button.addEventListener('click', function(e) {
+            this.style.transform = 'translateY(0) scale(0.98)';
+            setTimeout(() => {
+                this.style.transform = 'translateY(-2px) scale(1)';
+            }, 150);
+        });
+    }
+}
+
+// Simple parallax effect
+function initSignupParallax() {
+    document.addEventListener('mousemove', (e) => {
+        const card = document.querySelector('.signup-card-3d-light');
+        if (!card) return;
+        
+        const x = (e.clientX / window.innerWidth - 0.5) * 10;
+        const y = (e.clientY / window.innerHeight - 0.5) * 10;
+        
+        card.style.transform = `translateY(-5px) rotateX(${y * 0.1}deg) rotateY(${x * 0.1}deg)`;
+    });
+    
+    document.addEventListener('mouseleave', () => {
+        const card = document.querySelector('.signup-card-3d-light');
+        if (card) {
+            card.style.transform = 'translateY(-5px) rotateX(0deg) rotateY(0deg)';
+        }
+    });
+}
+
+// Password strength indicator
+function initPasswordStrength() {
+    const passwordInput = document.querySelector('input[name="password"]');
+    if (!passwordInput) return;
+    
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        let strengthColor = '#dc2626';
+        
+        // Check password strength
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/\d/.test(password)) strength++;
+        if (/[!@#$%^&*(),.?":{}|<>]/.test(password)) strength++;
+        
+        switch (strength) {
+            case 0:
+            case 1:
+                strengthColor = '#dc2626';
+                break;
+            case 2:
+                strengthColor = '#f59e0b';
+                break;
+            case 3:
+                strengthColor = '#eab308';
+                break;
+            case 4:
+                strengthColor = '#22c55e';
+                break;
+            case 5:
+                strengthColor = '#16a34a';
+                break;
+        }
+        
+        // Update visual feedback
+        if (password.length > 0) {
+            this.style.borderColor = strengthColor;
+            this.style.boxShadow = `0 0 0 3px ${strengthColor}20, 0 4px 12px rgba(0, 0, 0, 0.1)`;
+        }
+    });
+}
+
+// Role selection enhancement
+function initRoleSelection() {
+    const roleSelect = document.querySelector('select[name="role"]');
+    if (!roleSelect) return;
+    
+    roleSelect.addEventListener('change', function() {
+        const selectedRole = this.value;
+        
+        if (selectedRole) {
+            this.style.borderColor = '#22c55e';
+            this.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)';
+        }
+    });
+}
+
+// Email validation enhancement
+function initEmailValidation() {
+    const emailInput = document.querySelector('input[name="email"]');
+    if (!emailInput) return;
+    
+    emailInput.addEventListener('blur', function() {
+        const email = this.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (email && emailRegex.test(email)) {
+            this.style.borderColor = '#22c55e';
+            this.style.boxShadow = '0 0 0 3px rgba(34, 197, 94, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)';
+        } else if (email) {
+            this.style.borderColor = '#dc2626';
+            this.style.boxShadow = '0 0 0 3px rgba(220, 38, 38, 0.1), 0 4px 12px rgba(0, 0, 0, 0.1)';
+        }
+    });
+}
+
+// Initialize all signup features
+document.addEventListener('DOMContentLoaded', () => {
+    // Add small delay to ensure DOM is ready
+    setTimeout(() => {
+        initSignupParticles();
+        initSignupFormAnimations();
+        initSignupParallax();
+        initPasswordStrength();
+        initRoleSelection();
+        initEmailValidation();
+    }, 100);
+    
+    // Refresh particles occasionally
+    setInterval(() => {
+        const container = document.getElementById('signupParticleContainer');
+        if (container && container.children.length < 15) {
+            container.appendChild(createSignupParticle());
+        }
+    }, 5000);
+});
+
+// Handle form submission animation
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const button = this.querySelector('.signup-btn-3d-light');
+            if (button) {
+                button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Creating Account...';
+                button.disabled = true;
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}
