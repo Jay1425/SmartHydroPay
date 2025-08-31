@@ -6,6 +6,7 @@ Flask-Migrate==4.0.5
 Flask-Mail==0.9.1
 WTForms==3.0.1
 Werkzeug==2.3.7
+<<<<<<< HEAD
 SQLAlchemy==2.0.21
 Alembic==1.12.0
 email-validator==2.0.0
@@ -15,3 +16,7 @@ MarkupSafe==2.1.3
 itsdangerous==2.1.2
 click==8.1.7
 blinker==1.6.3
+=======
+Flask-Mail==0.10.0
+email_validator
+>>>>>>> 7bc0209943e21195c1b545b6679a09f004efd661

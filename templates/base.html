@@ -5,50 +5,101 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SmartHydroPay - {% block title %}Smart Subsidy Management{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    screens: {
+                        'xs': '475px',
+                        'sm': '640px',
+                        'md': '768px',
+                        'lg': '1024px',
+                        'xl': '1280px',
+                        '2xl': '1536px',
+                    }
+                }
+            }
+        }
+    </script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Mobile-first responsive design */
+        @media (max-width: 640px) {
+            .mobile-hidden { display: none !important; }
+            .mobile-text-sm { font-size: 0.875rem !important; }
+            .mobile-p-2 { padding: 0.5rem !important; }
+            .mobile-px-2 { padding-left: 0.5rem !important; padding-right: 0.5rem !important; }
+            .mobile-py-1 { padding-top: 0.25rem !important; padding-bottom: 0.25rem !important; }
+            .mobile-text-center { text-align: center !important; }
+            .mobile-block { display: block !important; }
+            .mobile-w-full { width: 100% !important; }
+            .mobile-mb-2 { margin-bottom: 0.5rem !important; }
+        }
+        
+        @media (min-width: 641px) and (max-width: 1023px) {
+            .tablet-hidden { display: none !important; }
+            .tablet-text-base { font-size: 1rem !important; }
+            .tablet-p-3 { padding: 0.75rem !important; }
+            .tablet-grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+        }
+        
+        @media (min-width: 1024px) {
+            .desktop-flex { display: flex !important; }
+            .desktop-grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)) !important; }
+        }
+    </style>
 </head>
 <body class="bg-gradient-to-br from-slate-50 via-blue-50 to-green-50 min-h-screen font-inter">
     <!-- Navigation -->
     <nav class="bg-gradient-to-r from-white/95 to-blue-50/95 backdrop-blur-md border-b border-blue-100/50 text-slate-700 shadow-lg sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-4">
-            <div class="flex justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <div class="text-green-600 text-2xl transform hover:scale-110 transition-transform duration-300">
+        <div class="max-w-7xl mx-auto px-2 sm:px-4 lg:px-6">
+            <div class="flex justify-between items-center py-2 sm:py-3 lg:py-4">
+                <!-- Logo Section -->
+                <div class="flex items-center space-x-2 sm:space-x-4">
+                    <div class="text-green-600 text-xl sm:text-2xl transform hover:scale-110 transition-transform duration-300">
                         <i class="fas fa-leaf"></i>
                     </div>
-                    <a href="{{ url_for('main.index') }}" class="text-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent hover:from-green-700 hover:to-blue-700 transition-all duration-300">SmartHydroPay</a>
+                    <a href="{{ url_for('main.index') }}" class="text-sm sm:text-lg lg:text-xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent hover:from-green-700 hover:to-blue-700 transition-all duration-300">
+                        <span class="hidden xs:inline">SmartHydroPay</span>
+                        <span class="xs:hidden">SHP</span>
+                    </a>
                 </div>
                 
-                <!-- Navigation Menu -->
-                <div class="flex items-center space-x-6">
+                <!-- Mobile Menu Button -->
+                <button id="mobile-menu-button" class="md:hidden p-2 rounded-lg hover:bg-slate-100 transition-colors">
+                    <i class="fas fa-bars text-slate-600"></i>
+                </button>
+                
+                <!-- Desktop Navigation Menu -->
+                <div class="hidden md:flex items-center space-x-2 lg:space-x-6">
                     {% if current_user.is_authenticated %}
-                        <a href="{{ url_for('main.dashboard') }}" class="text-slate-600 hover:text-green-600 hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-300">
-                            <i class="fas fa-tachometer-alt mr-1"></i>Dashboard
+                        <a href="{{ url_for('main.dashboard') }}" class="text-slate-600 hover:text-green-600 hover:bg-green-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                            <i class="fas fa-tachometer-alt mr-1"></i><span class="hidden lg:inline">Dashboard</span>
                         </a>
                         
                         {% if current_user.role == 'producer' %}
-                            <a href="{{ url_for('producer.apply') }}" class="text-slate-600 hover:text-green-600 hover:bg-green-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-plus mr-1"></i>Apply
+                            <a href="{{ url_for('producer.apply') }}" class="text-slate-600 hover:text-green-600 hover:bg-green-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-plus mr-1"></i><span class="hidden lg:inline">Apply</span>
                             </a>
-                            <a href="{{ url_for('producer.my_applications') }}" class="text-slate-600 hover:text-blue-600 hover:bg-blue-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-file-alt mr-1"></i>My Applications
+                            <a href="{{ url_for('producer.my_applications') }}" class="text-slate-600 hover:text-blue-600 hover:bg-blue-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-file-alt mr-1"></i><span class="hidden xl:inline">Applications</span>
                             </a>
                         {% elif current_user.role == 'auditor' %}
-                            <a href="{{ url_for('auditor.applications') }}" class="text-slate-600 hover:text-purple-600 hover:bg-purple-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-search mr-1"></i>Verify Applications
+                            <a href="{{ url_for('auditor.applications') }}" class="text-slate-600 hover:text-purple-600 hover:bg-purple-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-search mr-1"></i><span class="hidden lg:inline">Verify</span>
                             </a>
                         {% elif current_user.role == 'government' %}
-                            <a href="{{ url_for('government.applications') }}" class="text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-check-circle mr-1"></i>Approve Applications
+                            <a href="{{ url_for('government.applications') }}" class="text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-check-circle mr-1"></i><span class="hidden lg:inline">Approve</span>
                             </a>
                         {% elif current_user.role == 'bank' %}
-                            <a href="{{ url_for('bank.transactions') }}" class="text-slate-600 hover:text-orange-600 hover:bg-orange-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-dollar-sign mr-1"></i>Transactions
+                            <a href="{{ url_for('bank.transactions') }}" class="text-slate-600 hover:text-orange-600 hover:bg-orange-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-dollar-sign mr-1"></i><span class="hidden lg:inline">Transactions</span>
                             </a>
-                            <a href="{{ url_for('bank.pending_releases') }}" class="text-slate-600 hover:text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg transition-all duration-300">
-                                <i class="fas fa-clock mr-1"></i>Pending Releases
+                            <a href="{{ url_for('bank.pending_releases') }}" class="text-slate-600 hover:text-red-600 hover:bg-red-50 px-2 lg:px-3 py-2 rounded-lg transition-all duration-300 text-sm lg:text-base">
+                                <i class="fas fa-clock mr-1"></i><span class="hidden xl:inline">Pending</span>
                             </a>
                         {% endif %}
                         
@@ -58,7 +109,9 @@
                                     <img src="{{ url_for('static', filename='uploads/profile_photos/' + current_user.profile_photo) }}" 
                                          alt="{{ current_user.name }}" class="w-6 h-6 rounded-full mr-2 object-cover border border-slate-300">
                                 {% else %}
-                                    <i class="fas fa-user mr-2 text-slate-500"></i>
+                                    <div class="w-6 h-6 rounded-full mr-2 bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center text-white text-xs font-semibold">
+                                        {{ current_user.name[0].upper() }}
+                                    </div>
                                 {% endif %}
                                 {{ current_user.name }} 
                                 <span class="text-xs bg-gradient-to-r from-green-500 to-blue-500 text-white px-2 py-1 rounded-full ml-2">{{ current_user.role.title() }}</span>
@@ -79,6 +132,97 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 z-50 hidden">
+        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm" onclick="toggleMobileMenu()"></div>
+        <div class="fixed top-0 right-0 w-80 h-full bg-white/95 backdrop-blur-xl shadow-2xl transform translate-x-full transition-transform duration-300 ease-out" id="mobile-menu-panel">
+            <div class="p-6">
+                <!-- Close Button -->
+                <button onclick="toggleMobileMenu()" class="absolute top-4 right-4 p-2 rounded-lg hover:bg-slate-100 transition-colors">
+                    <i class="fas fa-times text-slate-600"></i>
+                </button>
+                
+                <!-- Mobile Menu Content -->
+                <div class="mt-12 space-y-4">
+                    {% if current_user.is_authenticated %}
+                        <!-- User Profile Section -->
+                        <div class="flex items-center pb-4 border-b border-slate-200">
+                            {% if current_user.profile_photo and current_user.profile_photo != 'default_avatar.svg' %}
+                                <img src="{{ url_for('static', filename='uploads/profile_photos/' + current_user.profile_photo) }}" 
+                                     alt="{{ current_user.name }}" class="w-10 h-10 rounded-full mr-3 object-cover border border-slate-300">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-green-500 to-blue-500 flex items-center justify-center mr-3">
+                                    <i class="fas fa-user text-white"></i>
+                                </div>
+                            {% endif %}
+                            <div>
+                                <p class="font-semibold text-slate-800">{{ current_user.name }}</p>
+                                <p class="text-sm text-slate-600 bg-gradient-to-r from-green-500 to-blue-500 bg-clip-text text-transparent">{{ current_user.role.title() }}</p>
+                            </div>
+                        </div>
+                        
+                        <!-- Navigation Links -->
+                        <a href="{{ url_for('main.dashboard') }}" class="flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors group">
+                            <i class="fas fa-tachometer-alt text-green-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-slate-700 group-hover:text-green-600">Dashboard</span>
+                        </a>
+                        
+                        {% if current_user.role == 'producer' %}
+                            <a href="{{ url_for('producer.apply') }}" class="flex items-center p-3 rounded-lg hover:bg-green-50 transition-colors group">
+                                <i class="fas fa-plus text-green-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-green-600">Apply for Subsidy</span>
+                            </a>
+                            <a href="{{ url_for('producer.my_applications') }}" class="flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                                <i class="fas fa-file-alt text-blue-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-blue-600">My Applications</span>
+                            </a>
+                        {% elif current_user.role == 'auditor' %}
+                            <a href="{{ url_for('auditor.applications') }}" class="flex items-center p-3 rounded-lg hover:bg-purple-50 transition-colors group">
+                                <i class="fas fa-search text-purple-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-purple-600">Verify Applications</span>
+                            </a>
+                        {% elif current_user.role == 'government' %}
+                            <a href="{{ url_for('government.applications') }}" class="flex items-center p-3 rounded-lg hover:bg-indigo-50 transition-colors group">
+                                <i class="fas fa-check-circle text-indigo-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-indigo-600">Approve Applications</span>
+                            </a>
+                        {% elif current_user.role == 'bank' %}
+                            <a href="{{ url_for('bank.transactions') }}" class="flex items-center p-3 rounded-lg hover:bg-orange-50 transition-colors group">
+                                <i class="fas fa-dollar-sign text-orange-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-orange-600">Transactions</span>
+                            </a>
+                            <a href="{{ url_for('bank.pending_releases') }}" class="flex items-center p-3 rounded-lg hover:bg-red-50 transition-colors group">
+                                <i class="fas fa-clock text-red-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                                <span class="text-slate-700 group-hover:text-red-600">Pending Releases</span>
+                            </a>
+                        {% endif %}
+                        
+                        <hr class="my-4 border-slate-200">
+                        
+                        <a href="{{ url_for('main.profile') }}" class="flex items-center p-3 rounded-lg hover:bg-slate-50 transition-colors group">
+                            <i class="fas fa-user-cog text-slate-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-slate-700 group-hover:text-slate-800">Profile Settings</span>
+                        </a>
+                        
+                        <a href="{{ url_for('auth.logout') }}" class="flex items-center p-3 rounded-lg hover:bg-red-50 transition-colors group">
+                            <i class="fas fa-sign-out-alt text-red-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-slate-700 group-hover:text-red-600">Logout</span>
+                        </a>
+                    {% else %}
+                        <a href="{{ url_for('auth.login') }}" class="flex items-center p-3 rounded-lg hover:bg-blue-50 transition-colors group">
+                            <i class="fas fa-sign-in-alt text-blue-600 mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span class="text-slate-700 group-hover:text-blue-600">Login</span>
+                        </a>
+                        <a href="{{ url_for('auth.signup') }}" class="flex items-center p-3 rounded-lg bg-gradient-to-r from-green-500 to-blue-500 text-white hover:from-green-600 hover:to-blue-600 transition-all group">
+                            <i class="fas fa-user-plus mr-3 group-hover:scale-110 transition-transform"></i>
+                            <span>Sign Up</span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Flash Messages -->
     {% with messages = get_flashed_messages(with_categories=true) %}
@@ -111,5 +255,53 @@
             <p class="text-slate-600">&copy; 2025 SmartHydroPay. Smart Subsidy Management for Green Hydrogen.</p>
         </div>
     </footer>
+
+    <!-- Mobile Menu JavaScript -->
+    <script>
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+            
+            if (mobileMenu.classList.contains('hidden')) {
+                // Show menu
+                mobileMenu.classList.remove('hidden');
+                setTimeout(() => {
+                    mobileMenuPanel.classList.remove('translate-x-full');
+                }, 10);
+            } else {
+                // Hide menu
+                mobileMenuPanel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    mobileMenu.classList.add('hidden');
+                }, 300);
+            }
+        }
+
+        // Add click event to mobile menu button
+        document.addEventListener('DOMContentLoaded', function() {
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', toggleMobileMenu);
+            }
+
+            // Close mobile menu when clicking on links
+            const mobileMenuLinks = document.querySelectorAll('#mobile-menu a');
+            mobileMenuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    setTimeout(toggleMobileMenu, 100);
+                });
+            });
+        });
+
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth >= 768) { // md breakpoint
+                const mobileMenu = document.getElementById('mobile-menu');
+                const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+                mobileMenu.classList.add('hidden');
+                mobileMenuPanel.classList.add('translate-x-full');
+            }
+        });
+    </script>
 </body>
 </html>

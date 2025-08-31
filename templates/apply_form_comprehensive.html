@@ -1,0 +1,455 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Comprehensive Application{% endblock %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+    <div class="bg-white/95 backdrop-blur-sm rounded-xl sm:rounded-2xl shadow-2xl border border-slate-200/50 p-4 sm:p-6 lg:p-8">
+        <div class="text-center mb-6 lg:mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-r from-green-100 to-blue-100 rounded-full mb-4">
+                <i class="fas fa-industry text-2xl sm:text-3xl lg:text-4xl text-green-500"></i>
+            </div>
+            <h2 class="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-2">
+                Comprehensive Green Hydrogen Subsidy Application
+            </h2>
+            <p class="text-sm sm:text-base text-slate-600">Submit detailed project information for subsidy evaluation</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {{ form.hidden_tag() }}
+            
+            <!-- Hidden fields for coordinates -->
+            {{ form.project_latitude(id="hidden-latitude") }}
+            {{ form.project_longitude(id="hidden-longitude") }}
+            
+            <!-- Project Information Section -->
+            <div class="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 sm:p-6 border border-green-200">
+                <h3 class="text-lg sm:text-xl font-bold text-green-700 mb-4 flex items-center">
+                    <i class="fas fa-project-diagram mr-3"></i>
+                    Project Information
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        {{ form.project_name.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.project_name(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200") }}
+                        {% if form.project_name.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.project_name.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.project_title.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.project_title(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200") }}
+                        {% if form.project_title.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.project_title.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="lg:col-span-2">
+                        {{ form.project_description.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.project_description(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200 resize-y", rows="4") }}
+                        {% if form.project_description.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.project_description.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.project_location.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="space-y-3">
+                            {{ form.project_location(id="location-input", class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200", placeholder="Enter location or click on map to select") }}
+                            
+                            <!-- Google Maps Container -->
+                            <div class="relative">
+                                <div id="map" class="w-full h-64 rounded-xl border-2 border-slate-200 shadow-md"></div>
+                                <button type="button" id="current-location-btn" class="absolute top-3 right-3 bg-white hover:bg-gray-100 p-2 rounded-lg shadow-md border border-gray-300 transition-colors">
+                                    <i class="fas fa-crosshairs text-blue-600"></i>
+                                </button>
+                            </div>
+                            
+                            <!-- Coordinates Display -->
+                            <div class="grid grid-cols-2 gap-3">
+                                <div>
+                                    <label class="block text-xs text-slate-600 mb-1">Latitude</label>
+                                    <input type="text" id="latitude" readonly class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-700">
+                                </div>
+                                <div>
+                                    <label class="block text-xs text-slate-600 mb-1">Longitude</label>
+                                    <input type="text" id="longitude" readonly class="w-full px-3 py-2 text-sm bg-gray-50 border border-gray-200 rounded-lg text-gray-700">
+                                </div>
+                            </div>
+                        </div>
+                        {% if form.project_location.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.project_location.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.expected_completion_date.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.expected_completion_date(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all duration-200") }}
+                        {% if form.expected_completion_date.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.expected_completion_date.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technical Specifications Section -->
+            <div class="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-4 sm:p-6 border border-blue-200">
+                <h3 class="text-lg sm:text-xl font-bold text-blue-700 mb-4 flex items-center">
+                    <i class="fas fa-cogs mr-3"></i>
+                    Technical Specifications
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                    <div>
+                        {{ form.technology_type.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.technology_type(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200") }}
+                        {% if form.technology_type.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.technology_type.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.capacity_mw.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="relative">
+                            {{ form.capacity_mw(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200", step="0.1") }}
+                            <span class="absolute right-3 top-3 text-slate-500 text-sm">MW</span>
+                        </div>
+                        {% if form.capacity_mw.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.capacity_mw.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.capacity_tons.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="relative">
+                            {{ form.capacity_tons(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200", step="0.1") }}
+                            <span class="absolute right-3 top-3 text-slate-500 text-sm">tons/day</span>
+                        </div>
+                        {% if form.capacity_tons.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.capacity_tons.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial Information Section -->
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl p-4 sm:p-6 border border-yellow-200">
+                <h3 class="text-lg sm:text-xl font-bold text-yellow-700 mb-4 flex items-center">
+                    <i class="fas fa-chart-line mr-3"></i>
+                    Financial Information
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        {{ form.capex_estimate.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="relative">
+                            {{ form.capex_estimate(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 transition-all duration-200", step="0.1") }}
+                            <span class="absolute right-3 top-3 text-slate-500 text-sm">Crores ₹</span>
+                        </div>
+                        {% if form.capex_estimate.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.capex_estimate.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.opex_estimate.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="relative">
+                            {{ form.opex_estimate(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-yellow-500 focus:ring-2 focus:ring-yellow-200 transition-all duration-200", step="0.1") }}
+                            <span class="absolute right-3 top-3 text-slate-500 text-sm">Crores ₹/year</span>
+                        </div>
+                        {% if form.opex_estimate.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.opex_estimate.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Infrastructure & Compliance Section -->
+            <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 sm:p-6 border border-purple-200">
+                <h3 class="text-lg sm:text-xl font-bold text-purple-700 mb-4 flex items-center">
+                    <i class="fas fa-building mr-3"></i>
+                    Infrastructure & Compliance
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        {{ form.land_acquisition_status.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.land_acquisition_status(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200") }}
+                        {% if form.land_acquisition_status.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.land_acquisition_status.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.power_supply_arrangement.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.power_supply_arrangement(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200") }}
+                        {% if form.power_supply_arrangement.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.power_supply_arrangement.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.water_source.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        {{ form.water_source(class="w-full px-4 py-3 border-2 border-slate-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 transition-all duration-200") }}
+                        {% if form.water_source.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.water_source.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="flex items-center space-x-3">
+                        {{ form.environmental_clearance(class="w-5 h-5 text-purple-600 bg-purple-100 border-purple-300 rounded focus:ring-purple-500 focus:ring-2") }}
+                        {{ form.environmental_clearance.label(class="text-slate-700 text-sm font-semibold") }}
+                        {% if form.environmental_clearance.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.environmental_clearance.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Document Upload Section -->
+            <div class="bg-gradient-to-r from-indigo-50 to-cyan-50 rounded-xl p-4 sm:p-6 border border-indigo-200">
+                <h3 class="text-lg sm:text-xl font-bold text-indigo-700 mb-4 flex items-center">
+                    <i class="fas fa-file-upload mr-3"></i>
+                    Document Uploads
+                </h3>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                    <div>
+                        {{ form.environmental_clearance_file.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="flex items-center justify-center w-full">
+                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-indigo-300 border-dashed rounded-xl cursor-pointer bg-indigo-50 hover:bg-indigo-100">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-cloud-upload-alt text-2xl text-indigo-500 mb-2"></i>
+                                    <p class="text-sm text-indigo-700">Environmental Clearance</p>
+                                    <p class="text-xs text-indigo-500">PDF, DOC, or Image files</p>
+                                </div>
+                                {{ form.environmental_clearance_file(class="hidden") }}
+                            </label>
+                        </div>
+                        {% if form.environmental_clearance_file.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.environmental_clearance_file.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div>
+                        {{ form.feasibility_report_file.label(class="block text-slate-700 text-sm font-semibold mb-2") }}
+                        <div class="flex items-center justify-center w-full">
+                            <label class="flex flex-col items-center justify-center w-full h-32 border-2 border-indigo-300 border-dashed rounded-xl cursor-pointer bg-indigo-50 hover:bg-indigo-100">
+                                <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                    <i class="fas fa-chart-bar text-2xl text-indigo-500 mb-2"></i>
+                                    <p class="text-sm text-indigo-700">Feasibility Report</p>
+                                    <p class="text-xs text-indigo-500">PDF, DOC, or Excel files</p>
+                                </div>
+                                {{ form.feasibility_report_file(class="hidden") }}
+                            </label>
+                        </div>
+                        {% if form.feasibility_report_file.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.feasibility_report_file.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="flex flex-col sm:flex-row gap-4 pt-6">
+                <button type="submit" class="flex-1 bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center">
+                    <i class="fas fa-paper-plane mr-2"></i>
+                    Submit Comprehensive Application
+                </button>
+                
+                <a href="{{ url_for('producer.my_applications') }}" class="flex-1 sm:flex-none bg-slate-600 hover:bg-slate-700 text-white font-bold py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg flex items-center justify-center">
+                    <i class="fas fa-arrow-left mr-2"></i>
+                    Back to Applications
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Google Maps API -->
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBo-1234567890&libraries=places&callback=initMap"></script>
+
+<script>
+let map;
+let marker;
+let geocoder;
+let autocomplete;
+
+// Initialize Google Map
+function initMap() {
+    // Default location (Delhi, India)
+    const defaultLocation = { lat: 28.6139, lng: 77.2090 };
+    
+    // Initialize map
+    map = new google.maps.Map(document.getElementById('map'), {
+        zoom: 10,
+        center: defaultLocation,
+        mapTypeControl: true,
+        streetViewControl: true,
+        fullscreenControl: true,
+        styles: [
+            {
+                featureType: 'all',
+                elementType: 'geometry.fill',
+                stylers: [{ color: '#f0f8ff' }]
+            },
+            {
+                featureType: 'water',
+                elementType: 'all',
+                stylers: [{ color: '#4a90e2' }]
+            }
+        ]
+    });
+    
+    // Initialize geocoder
+    geocoder = new google.maps.Geocoder();
+    
+    // Initialize autocomplete for location input
+    const locationInput = document.getElementById('location-input');
+    autocomplete = new google.maps.places.Autocomplete(locationInput, {
+        componentRestrictions: { country: 'in' },
+        fields: ['place_id', 'geometry', 'name', 'formatted_address']
+    });
+    
+    // Initialize marker
+    marker = new google.maps.Marker({
+        map: map,
+        draggable: true,
+        animation: google.maps.Animation.DROP
+    });
+    
+    // Map click listener
+    map.addListener('click', function(event) {
+        const clickedLocation = event.latLng;
+        updateMarkerPosition(clickedLocation);
+        updateLocationInfo(clickedLocation);
+    });
+    
+    // Marker drag listener
+    marker.addListener('dragend', function() {
+        const markerPosition = marker.getPosition();
+        updateLocationInfo(markerPosition);
+    });
+    
+    // Autocomplete place changed listener
+    autocomplete.addListener('place_changed', function() {
+        const place = autocomplete.getPlace();
+        if (place.geometry) {
+            const location = place.geometry.location;
+            map.setCenter(location);
+            map.setZoom(15);
+            updateMarkerPosition(location);
+            updateLocationInfo(location);
+        }
+    });
+    
+    // Current location button
+    document.getElementById('current-location-btn').addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const userLocation = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                map.setCenter(userLocation);
+                map.setZoom(15);
+                updateMarkerPosition(userLocation);
+                updateLocationInfo(userLocation);
+            }, function() {
+                alert('Unable to retrieve your location. Please ensure location services are enabled.');
+            });
+        } else {
+            alert('Geolocation is not supported by this browser.');
+        }
+    });
+}
+
+// Update marker position
+function updateMarkerPosition(location) {
+    marker.setPosition(location);
+    marker.setVisible(true);
+}
+
+// Update location information
+function updateLocationInfo(location) {
+    const lat = location.lat();
+    const lng = location.lng();
+    
+    // Update coordinate displays
+    document.getElementById('latitude').value = lat.toFixed(6);
+    document.getElementById('longitude').value = lng.toFixed(6);
+    
+    // Update hidden form fields
+    document.getElementById('hidden-latitude').value = lat.toFixed(6);
+    document.getElementById('hidden-longitude').value = lng.toFixed(6);
+    
+    // Reverse geocoding to get address
+    geocoder.geocode({ location: location }, function(results, status) {
+        if (status === 'OK' && results[0]) {
+            const address = results[0].formatted_address;
+            document.getElementById('location-input').value = address;
+        }
+    });
+}
+
+// File upload preview functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    
+    fileInputs.forEach(input => {
+        input.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const label = this.closest('label');
+                const textElement = label.querySelector('p');
+                if (textElement) {
+                    textElement.textContent = file.name;
+                    textElement.classList.add('text-green-600', 'font-semibold');
+                }
+            }
+        });
+    });
+});
+
+// Handle map initialization error
+window.gm_authFailure = function() {
+    console.log('Google Maps API authentication failed. Using fallback location picker.');
+    // Hide map and show alternative input
+    document.getElementById('map').innerHTML = '<div class="flex items-center justify-center h-full bg-gray-100 text-gray-500 rounded-xl"><i class="fas fa-map-marked-alt text-4xl mb-2"></i><p>Interactive map unavailable. Please enter location manually.</p></div>';
+};
+</script>
+{% endblock %}
