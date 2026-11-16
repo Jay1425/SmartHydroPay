@@ -98,10 +98,10 @@ pip install -r requirements.txt
 ### 4. Environment Configuration
 Create a `.env` file in the project root:
 ```env
-SECRET_KEY=your-secret-key-here
+SECRET_KEY=replace-with-a-long-random-secret
 DATABASE_URL=sqlite:///smarthydropay.db
 MAIL_USERNAME=your-gmail@gmail.com
-MAIL_PASSWORD=your-app-password
+MAIL_PASSWORD=your-google-app-password
 FLASK_ENV=development
 ```
 
