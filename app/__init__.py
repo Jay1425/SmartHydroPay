@@ -19,16 +19,21 @@ def create_app():
             return value
     
     # Configuration
-    app.config['SECRET_KEY'] = 'a810f367e2a8296a40a7a4073b64f92476d542023a968f44d32e92e21255e427'
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///smarthydropay.db'
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY') or os.urandom(32)
+    if os.environ.get('FLASK_ENV') == 'production' and not os.environ.get('SECRET_KEY'):
+        raise RuntimeError('SECRET_KEY must be configured in production')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or 'sqlite:///smarthydropay.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['SESSION_COOKIE_SECURE'] = os.environ.get('FLASK_ENV') == 'production'
+    app.config['SESSION_COOKIE_HTTPONLY'] = True
+    app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
     
     # Mail configuration
-    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-    app.config['MAIL_PORT'] = 587
-    app.config['MAIL_USE_TLS'] = True
-    app.config['MAIL_USERNAME'] = 'aivisionaries.teams@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'rves fkcw ikpq mbmw'
+    app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+    app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', '587'))
+    app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'true').lower() in ('1', 'true', 'yes')
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', '')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', '')
     
     # File upload configuration
     app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 5MB max file size
