@@ -32,10 +32,10 @@ python run.py
 
 #### Environment Variables (.env)
 ```env
-SECRET_KEY=your-production-secret-key
+SECRET_KEY=replace-with-a-long-random-secret
 DATABASE_URL=postgresql://user:password@host:port/database
 MAIL_USERNAME=your-gmail@gmail.com
-MAIL_PASSWORD=your-app-password
+MAIL_PASSWORD=your-google-app-password
 FLASK_ENV=production
 ```
 
